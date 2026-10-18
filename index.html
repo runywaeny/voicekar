@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceKar - Seu Karaoke & Vídeos</title>
+    
+    <!-- Favicon: Ícone de Microfone Lilás Escuro na Aba do Navegador -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%235E3A8C'><path d='M12 14a3 3 0 0 0 3-3V5a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3zm5-3a1 1 0 0 0-2 0 3 3 0 0 1-6 0 1 1 0 0 0-2 0 5 5 0 0 0 4 4.9V19H9a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-3.1A5 5 0 0 0 17 11z'/></svg>">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        pastel: {
+                            bg: '#F7F4EF',
+                            card: '#FFFFFF',
+                            header: '#E8DFF5', /* Lilás claro no cabeçalho */
+                            primary: '#B5C99A',
+                            primaryHover: '#97AF7B',
+                            secondary: '#FFC8DD',
+                            accent: '#A2D2FF',
+                            text: '#4A4E69',
+                            border: '#D3C5E5',
+                            grayBorder: '#9CA3AF',
+                            greenBorder: '#10B981'
+                        },
+                        darkpastel: {
+                            bg: '#1D2A44',
+                            card: '#24344D',
+                            header: '#2D2438', /* Lilás escuro no modo escuro */
+                            primary: '#6B8E78',
+                            primaryHover: '#52735E',
+                            secondary: '#B57A95',
+                            accent: '#5E81AC',
+                            text: '#E5E9F0',
+                            border: '#443852',
+                            grayBorder: '#6B7280',
+                            greenBorder: '#34D399'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.4);
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(156, 163, 175, 0.7);
+        }
+        /* Borda lateral direita de 5px */
+        .right-border-original {
+            border-right: 5px solid #10B981 !important;
+        }
+        .dark .right-border-original {
+            border-right: 5px solid #34D399 !important;
+        }
+        .right-border-standard {
+            border-right: 5px solid #9CA3AF !important;
+        }
+        .dark .right-border-standard {
+            border-right: 5px solid #6B7280 !important;
+        }
+    </style>
+</head>
+<body class="bg-pastel-bg text-pastel-text dark:bg-darkpastel-bg dark:text-darkpastel-text h-full flex flex-col antialiased selection:bg-pastel-secondary selection:text-slate-800">
+
+    <!-- Header / Barra de Título (Fundo Lilás Claro) -->
+    <header class="bg-pastel-header dark:bg-darkpastel-header shadow-sm border-b border-pastel-border dark:border-darkpastel-border px-3 py-2 flex items-center justify-between gap-2 sticky top-0 z-20">
+        <!-- Título com Ícone de Microfone Lilás Escuro à Esquerda -->
+        <div class="flex items-center gap-2">
+            <!-- Ícone Microfone Lilás Escuro (#5E3A8C) -->
+            <div class="p-1.5 bg-white/70 dark:bg-slate-800/70 rounded-xl flex items-center justify-center shadow-xs">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#5E3A8C] dark:text-[#CBB2EE]" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3zm5-3a1 1 0 0 0-2 0 3 3 0 0 1-6 0 1 1 0 0 0-2 0 5 5 0 0 0 4 4.9V19H9a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-3.1A5 5 0 0 0 17 11z"/>
+                </svg>
+            </div>
+            <!-- APENAS A PALAVRA "VoiceKar" em texto -->
+            <h1 class="text-xl font-bold tracking-tight text-[#4A2E6E] dark:text-[#E8DFF5]">VoiceKar</h1>
+        </div>
+
+        <!-- Botões de Ação na Direita (ESTRITAMENTE ÍCONES) -->
+        <div class="flex items-center gap-1.5 sm:gap-2">
+            
+            <!-- Botão Adicionar Vídeo (Apenas Ícone) -->
+            <button onclick="openModal('addModal')" title="Adicionar Vídeo" class="p-2 bg-pastel-primary hover:bg-pastel-primaryHover dark:bg-darkpastel-primary dark:hover:bg-darkpastel-primaryHover text-slate-800 dark:text-white rounded-lg transition-colors shadow-xs">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+            </button>
+
+            <!-- Botão Importar / Exportar (Apenas Ícone) -->
+            <button onclick="openModal('ioModal')" title="Exportar / Importar JSON" class="p-2 bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 border border-pastel-border dark:border-darkpastel-border rounded-lg text-slate-700 dark:text-slate-200 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                </svg>
+            </button>
+
+            <!-- Botão Mudar Tema Diurno/Noturno (Apenas Ícone) -->
+            <button onclick="toggleTheme()" id="themeBtn" title="Alternar Tema Claro/Escuro" class="p-2 bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 border border-pastel-border dark:border-darkpastel-border rounded-lg text-slate-700 dark:text-slate-200 transition-colors">
+                <svg id="themeIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+            </button>
+
+            <!-- Botão Ajuda (?) (Apenas Ícone) -->
+            <button onclick="openModal('helpModal')" title="Ajuda de uso" class="p-2 bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 border border-pastel-border dark:border-darkpastel-border rounded-lg text-slate-700 dark:text-slate-200 font-bold transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </button>
+
+            <!-- Switch Button: Abertura sem NENHUMA palavra, apenas ícones do switch -->
+            <div class="flex items-center gap-1.5 bg-white/60 dark:bg-slate-800/60 px-2 py-1.5 rounded-lg border border-pastel-border dark:border-darkpastel-border" title="Modo de abertura: Desligado = No Conteúdo | Ligado = Em Nova Aba">
+                <!-- Ícone Tela / Conteúdo -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-600 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" id="openModeSwitch" onchange="toggleOpenMode()" class="sr-only peer">
+                    <div class="w-8 h-4 bg-gray-300 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:peer-checked:bg-pastel-accent"></div>
+                </label>
+
+                <!-- Ícone Nova Aba / Link Externo -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-600 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- Layout Principal -->
+    <div class="flex-1 flex flex-col md:flex-row overflow-hidden">
+        
+        <!-- Menu Lateral (Espaço Otimizado: Padding Reduzido) -->
+        <aside class="w-full md:w-[28%] lg:w-[30%] bg-pastel-card/50 dark:bg-darkpastel-card/50 border-r border-pastel-border dark:border-darkpastel-border flex flex-col h-[35vh] md:h-auto overflow-hidden">
+            
+            <!-- Campo de Busca (Padding reduzido) -->
+            <div class="p-2 border-b border-pastel-border dark:border-darkpastel-border bg-pastel-card dark:bg-darkpastel-card">
+                <div class="relative">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 pointer-events-none text-gray-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </span>
+                    <input type="text" id="searchInput" oninput="renderMenuList()" placeholder="Buscar..." class="w-full pl-8 pr-2 py-1 text-xs sm:text-sm rounded-md bg-pastel-bg dark:bg-darkpastel-bg border border-pastel-border dark:border-darkpastel-border focus:outline-none focus:ring-1 focus:ring-pastel-accent dark:focus:ring-darkpastel-accent">
+                </div>
+            </div>
+
+            <!-- Lista de Músicas (Padding compacto p-1.5, espaço reduzido space-y-1.5) -->
+            <div class="flex-1 overflow-y-auto p-1.5 space-y-1.5" id="songList">
+                <!-- Itens carregados dinamicamente via JS -->
+            </div>
+        </aside>
+
+        <!-- Área de Conteúdo (Embed Ocupa 100% Automático com Autoplay) -->
+        <main class="flex-1 flex flex-col bg-pastel-bg dark:bg-darkpastel-bg p-2 sm:p-3 overflow-hidden" id="contentArea">
+            
+            <!-- Mensagem Inicial -->
+            <div id="welcomeMessage" class="flex-1 flex flex-col items-center justify-center text-center p-4 text-gray-500 dark:text-gray-400 space-y-2">
+                <div class="p-3 bg-pastel-accent/20 dark:bg-darkpastel-accent/20 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-slate-600 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h2 class="text-lg font-semibold text-slate-800 dark:text-slate-200">Selecione uma música no menu</h2>
+                <p class="max-w-md text-xs sm:text-sm">Clique em um item da lista lateral para carregar o vídeo incorporado em tela inteira com reprodução automática.</p>
+            </div>
+
+            <!-- Player Container (Ocupa todo o espaço de Conteúdo) -->
+            <div id="playerContainer" class="hidden flex-1 flex flex-col w-full h-full overflow-hidden space-y-2">
+                
+                <!-- Barra com Título do Vídeo Ativo -->
+                <div class="bg-pastel-card dark:bg-darkpastel-card px-3 py-2 rounded-lg border border-pastel-border dark:border-darkpastel-border shadow-2xs flex items-center justify-between gap-2 shrink-0">
+                    <div class="flex items-center gap-2 overflow-hidden">
+                        <h2 id="playerTitle" class="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100 truncate"></h2>
+                        <span id="playbackBadge" class="text-[10px] sm:text-xs px-2 py-0.5 rounded-full font-medium shrink-0"></span>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <!-- Atalho para abrir no YouTube caso ocorram restrições no iframe local -->
+                        <a id="externalLinkBtn" href="#" target="_blank" title="Abrir diretamente no YouTube" class="p-1 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                        </a>
+                        <button onclick="deleteCurrentSong()" title="Excluir este vídeo" class="p-1 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Iframe do Embed Ocupando 100% da Largura e Altura com AUTOPLAY habilitado -->
+                <div class="flex-1 w-full h-full rounded-xl overflow-hidden shadow-md border border-pastel-border dark:border-darkpastel-border bg-black relative">
+                    <iframe id="youtubeIframe" class="w-full h-full border-0 absolute inset-0" src="" title="YouTube Video Embed" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL: Adicionar Vídeo -->
+    <div id="addModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
+        <div class="bg-pastel-card dark:bg-darkpastel-card rounded-2xl max-w-md w-full p-5 border border-pastel-border dark:border-darkpastel-border shadow-xl">
+            <h3 class="text-base font-bold text-slate-800 dark:text-slate-100 mb-3 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-pastel-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Adicionar Novo Vídeo
+            </h3>
+            <form id="addForm" onsubmit="handleAddSong(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Nome do Cantor / Banda</label>
+                    <input type="text" id="inputArtist" required placeholder="Ex: Adele" class="w-full px-3 py-1.5 rounded-lg bg-pastel-bg dark:bg-darkpastel-bg border border-pastel-border dark:border-darkpastel-border focus:outline-none focus:ring-1 focus:ring-pastel-accent text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Nome da Música</label>
+                    <input type="text" id="inputTitle" required placeholder="Ex: Set Fire To The Rain" class="w-full px-3 py-1.5 rounded-lg bg-pastel-bg dark:bg-darkpastel-bg border border-pastel-border dark:border-darkpastel-border focus:outline-none focus:ring-1 focus:ring-pastel-accent text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Link de Incorporação / Embed ou Link Comum</label>
+                    <input type="text" id="inputUrl" required placeholder="Ex: https://www.youtube.com/embed/a2giXO6eyuI ou https://youtu.be/..." class="w-full px-3 py-1.5 rounded-lg bg-pastel-bg dark:bg-darkpastel-bg border border-pastel-border dark:border-darkpastel-border focus:outline-none focus:ring-1 focus:ring-pastel-accent text-sm">
+                    <p class="text-[11px] text-gray-400 mt-1">Cole o link embed ou URL normal do YouTube. O app formatará com reprodução automática.</p>
+                </div>
+                <div class="flex items-center gap-2 pt-1">
+                    <input type="checkbox" id="inputOriginal" class="w-4 h-4 rounded text-pastel-primary focus:ring-pastel-primary border-gray-300">
+                    <label for="inputOriginal" class="text-xs text-slate-700 dark:text-slate-300 font-medium">Playback Original?</label>
+                </div>
+                <div class="flex justify-end gap-2 pt-3">
+                    <button type="button" onclick="closeModal('addModal')" class="px-3 py-1.5 text-xs rounded-lg bg-pastel-bg dark:bg-darkpastel-bg hover:bg-gray-200 dark:hover:bg-gray-700 text-slate-700 dark:text-slate-300">Cancelar</button>
+                    <button type="submit" class="px-4 py-1.5 text-xs rounded-lg bg-pastel-primary dark:bg-darkpastel-primary hover:bg-pastel-primaryHover dark:hover:bg-darkpastel-primaryHover text-slate-800 dark:text-white font-medium">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Exportar / Importar JSON -->
+    <div id="ioModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
+        <div class="bg-pastel-card dark:bg-darkpastel-card rounded-2xl max-w-md w-full p-5 border border-pastel-border dark:border-darkpastel-border shadow-xl space-y-4">
+            <h3 class="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-pastel-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                </svg>
+                Exportar / Importar JSON
+            </h3>
+            
+            <div class="p-3 bg-pastel-bg dark:bg-darkpastel-bg rounded-xl border border-pastel-border dark:border-darkpastel-border space-y-1.5">
+                <h4 class="font-semibold text-xs uppercase text-gray-500">Exportar Coleção</h4>
+                <button onclick="exportJSON()" class="w-full py-1.5 bg-pastel-accent/30 dark:bg-darkpastel-accent/30 hover:bg-pastel-accent/50 text-slate-800 dark:text-slate-100 font-medium text-xs rounded-lg transition-colors border border-pastel-accent/40">
+                    Baixar Arquivo JSON
+                </button>
+            </div>
+
+            <div class="p-3 bg-pastel-bg dark:bg-darkpastel-bg rounded-xl border border-pastel-border dark:border-darkpastel-border space-y-1.5">
+                <h4 class="font-semibold text-xs uppercase text-gray-500">Importar Coleção</h4>
+                <input type="file" id="importFile" accept=".json" class="hidden" onchange="importJSON(event)">
+                <button onclick="document.getElementById('importFile').click()" class="w-full py-1.5 bg-pastel-secondary/30 dark:bg-darkpastel-secondary/30 hover:bg-pastel-secondary/50 text-slate-800 dark:text-slate-100 font-medium text-xs rounded-lg transition-colors border border-pastel-secondary/40">
+                    Carregar Arquivo JSON
+                </button>
+            </div>
+
+            <div class="flex justify-end pt-1">
+                <button onclick="closeModal('ioModal')" class="px-3 py-1.5 text-xs rounded-lg bg-pastel-bg dark:bg-darkpastel-bg hover:bg-gray-200 dark:hover:bg-gray-700 text-slate-700 dark:text-slate-300">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Ajuda -->
+    <div id="helpModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
+        <div class="bg-pastel-card dark:bg-darkpastel-card rounded-2xl max-w-md w-full p-5 border border-pastel-border dark:border-darkpastel-border shadow-xl space-y-3 max-h-[85vh] overflow-y-auto">
+            <h3 class="text-base font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-pastel-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Instruções do VoiceKar
+            </h3>
+            
+            <div class="space-y-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                <div class="p-2.5 bg-pastel-bg dark:bg-darkpastel-bg rounded-lg">
+                    <strong class="text-slate-800 dark:text-slate-100">Borda Lateral Direita (5px):</strong>
+                    <p class="mt-0.5"><span class="text-emerald-500 font-bold">VERDE</span> = Playback Original. <span class="text-gray-400 font-bold">CINZA</span> = Playback comum.</p>
+                </div>
+
+                <div class="p-2.5 bg-pastel-bg dark:bg-darkpastel-bg rounded-lg">
+                    <strong class="text-slate-800 dark:text-slate-100">Switch de Abertura:</strong>
+                    <p class="mt-0.5">Ícone Tela (Esquerda) = Reproduz com Autoplay na área de conteúdo. Ícone Seta (Direita) = Abre em nova aba.</p>
+                </div>
+
+                <div class="p-2.5 bg-pastel-bg dark:bg-darkpastel-bg rounded-lg">
+                    <strong class="text-slate-800 dark:text-slate-100">Links do YouTube & Autoplay:</strong>
+                    <p class="mt-0.5">Ao clicar em um item, o parâmetro <code>autoplay=1</code> é enviado ao YouTube para iniciar o vídeo automaticamente no player.</p>
+                </div>
+            </div>
+
+            <div class="flex justify-end pt-2">
+                <button onclick="closeModal('helpModal')" class="px-4 py-1.5 text-xs rounded-lg bg-pastel-primary dark:bg-darkpastel-primary text-slate-800 dark:text-white font-medium">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lógica em JavaScript -->
+    <script>
+        // Músicas Exemplo
+        const initialSongs = [
+            { id: "1", artist: "4 Non Blondes", title: "Whats Up", url: "https://www.youtube.com/embed/6NXnxTNIWkc", isOriginal: true },
+            { id: "2", artist: "Adele", title: "Set Fire To The Rain", url: "https://www.youtube.com/embed/a2giXO6eyuI", isOriginal: false }
+        ];
+
+        let songs = [];
+        let selectedSongId = null;
+        let isDarkMode = false;
+        let openInNewTab = false;
+
+        window.onload = function() {
+            loadTheme();
+            loadOpenMode();
+            loadSongs();
+            renderMenuList();
+        };
+
+        function loadSongs() {
+            const stored = localStorage.getItem('voicekar_songs');
+            if (stored) {
+                try {
+                    songs = JSON.parse(stored);
+                } catch (e) {
+                    songs = [...initialSongs];
+                }
+            } else {
+                songs = [...initialSongs];
+            }
+            sortSongs();
+        }
+
+        function saveSongs() {
+            sortSongs();
+            localStorage.setItem('voicekar_songs', JSON.stringify(songs));
+            renderMenuList();
+        }
+
+        function sortSongs() {
+            songs.sort((a, b) => {
+                const nameA = `${a.artist} - ${a.title}`.toLowerCase();
+                const nameB = `${b.artist} - ${b.title}`.toLowerCase();
+                return nameA.localeCompare(nameB);
+            });
+        }
+
+        // Converte e garante parâmetro autoplay=1 e parâmetros de compatibilidade do YouTube
+        function formatEmbedUrlWithAutoplay(input) {
+            if (!input) return "";
+            
+            let videoId = "";
+
+            // Se for iframe completo
+            if (input.includes('<iframe')) {
+                const match = input.match(/src=["']([^"']+)["']/);
+                if (match && match[1]) input = match[1];
+            }
+
+            // Extrair ID do Vídeo
+            if (input.includes('youtube.com/embed/')) {
+                videoId = input.split('youtube.com/embed/')[1].split('?')[0].split('&')[0].split('#')[0];
+            } else if (input.includes('youtu.be/')) {
+                videoId = input.split('youtu.be/')[1].split('?')[0].split('#')[0];
+            } else if (input.includes('youtube.com/watch')) {
+                try {
+                    const urlParams = new URLSearchParams(input.split('?')[1]);
+                    videoId = urlParams.get("v") || "";
+                } catch(e) {}
+            }
+
+            if (videoId) {
+                // Monta URL com autoplay=1 e parâmetros contra restrições de player
+                return `https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1`;
+            }
+
+            // Fallback caso a URL não siga os padrões comuns
+            if (input.includes('?')) {
+                return input.includes('autoplay=1') ? input : `${input}&autoplay=1`;
+            } else {
+                return `${input}?autoplay=1`;
+            }
+        }
+
+        // Obtém URL normal do YouTube para caso de abertura em externa
+        function getWatchUrl(input) {
+            const embedUrl = formatEmbedUrlWithAutoplay(input);
+            if (embedUrl.includes('/embed/')) {
+                const id = embedUrl.split('/embed/')[1].split('?')[0];
+                return `https://www.youtube.com/watch?v=${id}`;
+            }
+            return input;
+        }
+
+        function renderMenuList() {
+            const listEl = document.getElementById('songList');
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            listEl.innerHTML = '';
+
+            const filtered = songs.filter(s => 
+                s.artist.toLowerCase().includes(query) || 
+                s.title.toLowerCase().includes(query)
+            );
+
+            if (filtered.length === 0) {
+                listEl.innerHTML = `<p class="text-[11px] text-center text-gray-400 py-3">Sem registros.</p>`;
+                return;
+            }
+
+            filtered.forEach(song => {
+                const item = document.createElement('div');
+                const isSelected = song.id === selectedSongId;
+                const borderClass = song.isOriginal ? 'right-border-original' : 'right-border-standard';
+
+                item.className = `py-1.5 px-2.5 rounded-lg cursor-pointer transition-all duration-150 shadow-2xs bg-pastel-card dark:bg-darkpastel-card hover:bg-slate-50 dark:hover:bg-slate-800 flex flex-col border border-pastel-border dark:border-darkpastel-border ${borderClass} ${isSelected ? 'ring-2 ring-pastel-accent dark:ring-darkpastel-accent' : ''}`;
+                
+                item.onclick = () => selectSong(song.id);
+
+                item.innerHTML = `
+                    <div class="font-bold text-xs text-slate-800 dark:text-slate-100 truncate">${escapeHtml(song.artist)}</div>
+                    <div class="text-[11px] text-slate-500 dark:text-slate-400 truncate">${escapeHtml(song.title)}</div>
+                `;
+
+                listEl.appendChild(item);
+            });
+        }
+
+        function selectSong(id) {
+            const song = songs.find(s => s.id === id);
+            if (!song) return;
+
+            selectedSongId = id;
+            renderMenuList();
+
+            const embedUrl = formatEmbedUrlWithAutoplay(song.url);
+            const watchUrl = getWatchUrl(song.url);
+
+            if (openInNewTab) {
+                window.open(watchUrl, '_blank');
+                
+                document.getElementById('welcomeMessage').classList.remove('hidden');
+                document.getElementById('playerContainer').classList.add('hidden');
+                document.getElementById('welcomeMessage').querySelector('h2').innerText = `Aberto em Nova Aba`;
+                document.getElementById('welcomeMessage').querySelector('p').innerText = `"${song.artist} - ${song.title}" foi aberto no YouTube.`;
+            } else {
+                document.getElementById('welcomeMessage').classList.add('hidden');
+                document.getElementById('playerContainer').classList.remove('hidden');
+
+                document.getElementById('playerTitle').innerText = `${song.artist} - ${song.title}`;
+                document.getElementById('externalLinkBtn').href = watchUrl;
+                
+                const badge = document.getElementById('playbackBadge');
+                if (song.isOriginal) {
+                    badge.innerText = 'Original';
+                    badge.className = 'text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300';
+                } else {
+                    badge.innerText = 'Padrão';
+                    badge.className = 'text-[10px] px-2 py-0.5 rounded-full font-bold bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300';
+                }
+
+                // Injeta a URL com autoplay=1 no iframe
+                document.getElementById('youtubeIframe').src = embedUrl;
+            }
+        }
+
+        function deleteCurrentSong() {
+            if (!selectedSongId) return;
+            songs = songs.filter(s => s.id !== selectedSongId);
+            selectedSongId = null;
+            saveSongs();
+            
+            document.getElementById('youtubeIframe').src = '';
+            document.getElementById('playerContainer').classList.add('hidden');
+            document.getElementById('welcomeMessage').classList.remove('hidden');
+            document.getElementById('welcomeMessage').querySelector('h2').innerText = `Selecione uma música no menu`;
+            document.getElementById('welcomeMessage').querySelector('p').innerText = `Clique em um item da lista para reproduzir o vídeo.`;
+        }
+
+        function handleAddSong(e) {
+            e.preventDefault();
+            const artist = document.getElementById('inputArtist').value.trim();
+            const title = document.getElementById('inputTitle').value.trim();
+            const rawUrl = document.getElementById('inputUrl').value.trim();
+            const isOriginal = document.getElementById('inputOriginal').checked;
+
+            if (!artist || !title || !rawUrl) return;
+
+            const newSong = {
+                id: Date.now().toString(),
+                artist,
+                title,
+                url: formatEmbedUrlWithAutoplay(rawUrl),
+                isOriginal
+            };
+
+            songs.push(newSong);
+            saveSongs();
+
+            document.getElementById('addForm').reset();
+            closeModal('addModal');
+            selectSong(newSong.id);
+        }
+
+        function toggleOpenMode() {
+            openInNewTab = document.getElementById('openModeSwitch').checked;
+            localStorage.setItem('voicekar_openmode', openInNewTab ? 'tab' : 'content');
+        }
+
+        function loadOpenMode() {
+            const mode = localStorage.getItem('voicekar_openmode');
+            openInNewTab = mode === 'tab';
+            document.getElementById('openModeSwitch').checked = openInNewTab;
+        }
+
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            if (isDarkMode) {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('voicekar_theme', 'dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('voicekar_theme', 'light');
+            }
+            updateThemeIcon();
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('voicekar_theme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                isDarkMode = true;
+                document.documentElement.classList.add('dark');
+            } else {
+                isDarkMode = false;
+                document.documentElement.classList.remove('dark');
+            }
+            updateThemeIcon();
+        }
+
+        function updateThemeIcon() {
+            const icon = document.getElementById('themeIcon');
+            if (isDarkMode) {
+                icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />`;
+            } else {
+                icon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />`;
+            }
+        }
+
+        function exportJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(songs, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `voicekar_backup_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importJSON(event) {
+            const fileReader = new FileReader();
+            fileReader.onload = function(e) {
+                try {
+                    const importedSongs = JSON.parse(e.target.result);
+                    if (Array.isArray(importedSongs)) {
+                        songs = importedSongs;
+                        saveSongs();
+                        closeModal('ioModal');
+                    } else {
+                        alert("Arquivo com formato inválido.");
+                    }
+                } catch (err) {
+                    alert("Erro ao ler arquivo JSON.");
+                }
+            };
+            if (event.target.files[0]) {
+                fileReader.readAsText(event.target.files[0]);
+            }
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+            document.getElementById(id).classList.add('flex');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+            document.getElementById(id).classList.remove('flex');
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
