@@ -95,44 +95,44 @@
             <h1 class="text-base sm:text-lg font-bold tracking-tight text-[#4A2E6E] dark:text-[#E8DFF5] truncate">VoiceKar</h1>
         </div>
 
-        <!-- Botões com espaçamento estrito de 1px -->
+        <!-- Botões com espaçamento de 1px -->
         <div class="flex items-center gap-[1px]">
-            <!-- 1. Botão Adicionar Vídeo -->
+            <!-- Botão Adicionar Vídeo -->
             <button onclick="openModal('addModal')" title="Adicionar Vídeo" class="p-1.5 bg-pastel-primary hover:bg-pastel-primaryHover dark:bg-darkpastel-primary dark:hover:bg-darkpastel-primaryHover text-slate-800 dark:text-white rounded-md transition-colors shadow-xs">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                 </svg>
             </button>
 
-            <!-- 2. Botão Importar / Exportar -->
+            <!-- Botão Importar / Exportar -->
             <button onclick="openModal('ioModal')" title="Exportar / Importar JSON" class="p-1.5 bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 border border-pastel-border dark:border-darkpastel-border rounded-md text-slate-700 dark:text-slate-200 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                 </svg>
             </button>
 
-            <!-- 3. Botão Tema -->
+            <!-- Botão Tema -->
             <button onclick="toggleTheme()" id="themeBtn" title="Alternar Tema" class="p-1.5 bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 border border-pastel-border dark:border-darkpastel-border rounded-md text-slate-700 dark:text-slate-200 transition-colors">
                 <svg id="themeIcon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                 </svg>
             </button>
 
-            <!-- 4. Botão Ajuda -->
+            <!-- Botão Ajuda -->
             <button onclick="openModal('helpModal')" title="Ajuda" class="p-1.5 bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 border border-pastel-border dark:border-darkpastel-border rounded-md text-slate-700 dark:text-slate-200 font-bold transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
             </button>
 
-            <!-- 5. Botão Status Assinante YouTube -->
+            <!-- Botão Status Assinante YouTube -->
             <button onclick="toggleYouTubeSubscriber()" id="subStatusBtn" title="Status de Assinante YouTube" class="p-1.5 bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 border border-pastel-border dark:border-darkpastel-border rounded-md text-slate-700 dark:text-slate-200 transition-colors flex items-center justify-center">
                 <svg id="subIcon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
             </button>
 
-            <!-- 6. Switch Button -->
+            <!-- Switch Button -->
             <div class="flex items-center bg-white/60 dark:bg-slate-800/60 px-1.5 py-1 rounded-md border border-pastel-border dark:border-darkpastel-border">
                 <label class="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" id="openModeSwitch" onchange="toggleOpenMode()" class="sr-only peer">
@@ -247,50 +247,19 @@
         </div>
     </div>
 
-    <!-- MODAL: Ajuda Detalhada -->
+    <!-- MODAL: Ajuda -->
     <div id="helpModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs hidden items-center justify-center p-3 z-50">
         <div class="bg-pastel-card dark:bg-darkpastel-card rounded-2xl max-w-md w-full p-4 border border-pastel-border dark:border-darkpastel-border shadow-xl space-y-2.5 max-h-[90vh] overflow-y-auto">
-            <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">Guia Completo do VoiceKar</h3>
+            <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">Ajuda do VoiceKar</h3>
             <div class="space-y-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                
                 <div class="p-2 bg-pastel-bg dark:bg-darkpastel-bg rounded-lg">
-                    <strong class="text-slate-800 dark:text-slate-100">1. Botão Adicionar Vídeo (+) :</strong>
-                    <p class="mt-0.5">Abre o formulário para cadastrar uma nova música informando o artista, título e link do YouTube. Ao salvar, o item é inserido automaticamente na ordem alfabética da lista lateral.</p>
+                    <strong class="text-slate-800 dark:text-slate-100">Como Adicionar Itens ao Menu:</strong>
+                    <p class="mt-0.5">Clique no botão com o ícone de adição (+) na barra superior. Preencha os dados e salve. O item será inserido automaticamente em ordem alfabética.</p>
                 </div>
-
                 <div class="p-2 bg-pastel-bg dark:bg-darkpastel-bg rounded-lg">
-                    <strong class="text-slate-800 dark:text-slate-100">2. Botão Importar/Exportar (Setas) :</strong>
-                    <p class="mt-0.5">Permite exportar toda a sua lista de músicas atual em um arquivo de backup `.json` ou importar uma lista salva anteriormente para o aplicativo.</p>
+                    <strong class="text-slate-800 dark:text-slate-100">Modo de Abertura (Switch):</strong>
+                    <p class="mt-0.5">Desligado = Abre o vídeo incorporado na área de conteúdo. Ligado = Abre diretamente em nova aba do navegador com clique nativo (permitindo autoplay irrestrito).</p>
                 </div>
-
-                <div class="p-2 bg-pastel-bg dark:bg-darkpastel-bg rounded-lg">
-                    <strong class="text-slate-800 dark:text-slate-100">3. Botão Mudar Tema (Lua/Sol) :</strong>
-                    <p class="mt-0.5">Alterna instantaneamente entre o modo diurno (cores pastéis claras) e o modo noturno (cores pastéis escuras).</p>
-                </div>
-
-                <div class="p-2 bg-pastel-bg dark:bg-darkpastel-bg rounded-lg">
-                    <strong class="text-slate-800 dark:text-slate-100">4. Botão de Ajuda (?) :</strong>
-                    <p class="mt-0.5">Abre esta janela de instruções detalhadas sobre o funcionamento do aplicativo.</p>
-                </div>
-
-                <div class="p-2 bg-pastel-bg dark:bg-darkpastel-bg rounded-lg">
-                    <strong class="text-slate-800 dark:text-slate-100">5. Botão Status Assinante YouTube (Escudo) :</strong>
-                    <p class="mt-0.5">Ativa ou desativa o modo Premium/Assinante. Quando ativado, otimiza o player embutido aplicando parâmetros para minimizar marcas e gerenciar comerciais.</p>
-                </div>
-
-                <div class="p-2 bg-pastel-bg dark:bg-darkpastel-bg rounded-lg">
-                    <strong class="text-slate-800 dark:text-slate-100">6. Botão Switch (Chave) :</strong>
-                    <p class="mt-0.5">Define o comportamento ao clicar em um item da lista lateral:<br>
-                    • <i>Desligado:</i> Reproduz o vídeo diretamente na área de conteúdo (incorporado).<br>
-                    • <i>Ligado:</i> Abre o vídeo em uma nova aba do navegador.<br>
-                    <i>Nota sobre o Firefox:</i> No navegador Firefox, o autoplay em nova aba pode exigir um clique adicional devido às políticas internas de segurança de mídia do próprio navegador.</p>
-                </div>
-
-                <div class="p-2 bg-pastel-bg dark:bg-darkpastel-bg rounded-lg">
-                    <strong class="text-slate-800 dark:text-slate-100">Indicadores Visuais (Bordas):</strong>
-                    <p class="mt-0.5"><span class="text-emerald-500 font-bold">Borda Verde</span> = Playback original.<br><span class="text-gray-400 font-bold">Borda Cinza</span> = Playback padrão.</p>
-                </div>
-
             </div>
             <div class="flex justify-end pt-1">
                 <button onclick="closeModal('helpModal')" class="px-3 py-1 text-xs rounded-lg bg-pastel-primary text-slate-800 font-medium">Fechar</button>
@@ -357,6 +326,7 @@
         function formatEmbedUrlWithAutoplay(input) {
             const videoId = extractVideoId(input);
             if (videoId) {
+                // Parâmetros otimizados para ocultar marcas e respeitar status premium de assinante
                 let extra = isYouTubeSubscriber ? "&iv_load_policy=3&modestbranding=1&controls=1" : "&controls=1";
                 return `https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1${extra}`;
             }
@@ -387,6 +357,7 @@
                 const isSelected = song.id === selectedSongId;
                 
                 if (openInNewTab) {
+                    // Renderiza como um link HTML nativo <a> para permitir o autoplay em nova aba garantido pelo navegador
                     const watchUrl = getWatchUrl(song.url);
                     const a = document.createElement('a');
                     a.href = watchUrl;
@@ -395,6 +366,7 @@
                     a.innerHTML = `<div class="font-bold text-xs text-slate-800 dark:text-slate-100 truncate">${escapeHtml(song.artist)}</div><div class="text-[10px] text-slate-500 truncate">${escapeHtml(song.title)}</div>`;
                     listEl.appendChild(a);
                 } else {
+                    // Renderiza como elemento clicável normal para carregar no embed interno
                     const item = document.createElement('div');
                     item.className = `py-1.5 px-2 rounded-lg cursor-pointer bg-pastel-card dark:bg-darkpastel-card hover:bg-slate-50 dark:hover:bg-slate-800 flex flex-col border border-pastel-border dark:border-darkpastel-border ${borderClass} ${isSelected ? 'ring-2 ring-pastel-accent' : ''}`;
                     item.onclick = () => selectSong(song.id);
@@ -505,7 +477,7 @@
         }
 
         function loadTheme() {
-            isDarkMode = localStorage.getItem('voicekar_theme'] === 'dark' || (!localStorage.getItem('voicekar_theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            isDarkMode = localStorage.getItem('voicekar_theme') === 'dark' || (!localStorage.getItem('voicekar_theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
             document.documentElement.classList.toggle('dark', isDarkMode);
             updateThemeIcon();
         }
