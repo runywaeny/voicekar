@@ -84,7 +84,7 @@
 </head>
 <body class="bg-pastel-bg text-pastel-text dark:bg-darkpastel-bg dark:text-darkpastel-text antialiased selection:bg-pastel-secondary selection:text-slate-800">
 
-    <!-- Header / Barra de Título (Espaçamento de 1px entre botões) -->
+    <!-- Header / Barra de Título -->
     <header class="bg-pastel-header dark:bg-darkpastel-header shadow-sm border-b border-pastel-border dark:border-darkpastel-border px-2 py-1.5 flex items-center justify-between shrink-0 z-20">
         <div class="flex items-center gap-1.5 overflow-hidden">
             <div class="p-1 bg-white/70 dark:bg-slate-800/70 rounded-lg flex items-center justify-center shadow-xs shrink-0">
@@ -95,7 +95,7 @@
             <h1 class="text-base sm:text-lg font-bold tracking-tight text-[#4A2E6E] dark:text-[#E8DFF5] truncate">VoiceKar</h1>
         </div>
 
-        <!-- Botões com espaçamento estrito de 1px (gap-[1px]) -->
+        <!-- Botões com espaçamento de 1px -->
         <div class="flex items-center gap-[1px]">
             <!-- Botão Adicionar Vídeo -->
             <button onclick="openModal('addModal')" title="Adicionar Vídeo" class="p-1.5 bg-pastel-primary hover:bg-pastel-primaryHover dark:bg-darkpastel-primary dark:hover:bg-darkpastel-primaryHover text-slate-800 dark:text-white rounded-md transition-colors shadow-xs">
@@ -142,7 +142,7 @@
         </div>
     </header>
 
-    <!-- Layout Principal Adaptado sem cortes para Retrato e Paisagem -->
+    <!-- Layout Principal -->
     <div class="flex-1 flex flex-col md:flex-row overflow-hidden w-full">
         
         <!-- Menu Lateral -->
@@ -170,7 +170,7 @@
                     </svg>
                 </div>
                 <h2 class="text-base font-semibold text-slate-800 dark:text-slate-200">Selecione uma música no menu</h2>
-                <p class="max-w-md text-xs">Clique em um item da lista lateral para carregar o vídeo incorporado em tela inteira com reprodução automática.</p>
+                <p class="max-w-md text-xs">Clique em um item da lista lateral para reproduzir.</p>
             </div>
 
             <div id="playerContainer" class="hidden flex-1 flex flex-col w-full h-full overflow-hidden space-y-1.5">
@@ -247,22 +247,18 @@
         </div>
     </div>
 
-    <!-- MODAL: Ajuda (Atualizado com instruções de inserção de itens) -->
+    <!-- MODAL: Ajuda -->
     <div id="helpModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs hidden items-center justify-center p-3 z-50">
         <div class="bg-pastel-card dark:bg-darkpastel-card rounded-2xl max-w-md w-full p-4 border border-pastel-border dark:border-darkpastel-border shadow-xl space-y-2.5 max-h-[90vh] overflow-y-auto">
             <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">Ajuda do VoiceKar</h3>
             <div class="space-y-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                 <div class="p-2 bg-pastel-bg dark:bg-darkpastel-bg rounded-lg">
                     <strong class="text-slate-800 dark:text-slate-100">Como Adicionar Itens ao Menu:</strong>
-                    <p class="mt-0.5">Clique no botão com o ícone de adição (+) na barra superior. Na janela que se abrir, preencha o <b>Nome do Cantor/Banda</b>, o <b>Nome da Música</b> e o <b>Link do Vídeo</b> do YouTube. Marque a caixa <i>"Playback original?"</i> se desejar que o item receba a borda indicativa verde. Ao salvar, o item será inserido automaticamente na ordem alfabética correta na lista lateral.</p>
+                    <p class="mt-0.5">Clique no botão com o ícone de adição (+) na barra superior. Preencha os dados e salve. O item será inserido automaticamente em ordem alfabética.</p>
                 </div>
                 <div class="p-2 bg-pastel-bg dark:bg-darkpastel-bg rounded-lg">
-                    <strong class="text-slate-800 dark:text-slate-100">Borda Lateral:</strong>
-                    <p class="mt-0.5"><span class="text-emerald-500 font-bold">Verde</span> = Playback Original. <span class="text-gray-400 font-bold">Cinza</span> = Playback Padrão.</p>
-                </div>
-                <div class="p-2 bg-pastel-bg dark:bg-darkpastel-bg rounded-lg">
-                    <strong class="text-slate-800 dark:text-slate-100">Switch de Abertura:</strong>
-                    <p class="mt-0.5">Desligado = Abre o vídeo incorporado na área de conteúdo com autoplay. Ligado = Abre o vídeo em uma nova aba do navegador com autoplay forçado.</p>
+                    <strong class="text-slate-800 dark:text-slate-100">Modo de Abertura (Switch):</strong>
+                    <p class="mt-0.5">Desligado = Abre o vídeo incorporado na área de conteúdo. Ligado = Abre diretamente em nova aba do navegador com clique nativo (permitindo autoplay irrestrito).</p>
                 </div>
             </div>
             <div class="flex justify-end pt-1">
@@ -311,49 +307,36 @@
             });
         }
 
-        function formatEmbedUrlWithAutoplay(input) {
+        function extractVideoId(input) {
             if (!input) return "";
-            let videoId = "";
             if (input.includes('<iframe')) {
                 const match = input.match(/src=["']([^"']+)["']/);
                 if (match && match[1]) input = match[1];
             }
             if (input.includes('youtube.com/embed/')) {
-                videoId = input.split('youtube.com/embed/')[1].split('?')[0].split('&')[0];
+                return input.split('youtube.com/embed/')[1].split('?')[0].split('&')[0];
             } else if (input.includes('youtu.be/')) {
-                videoId = input.split('youtu.be/')[1].split('?')[0];
+                return input.split('youtu.be/')[1].split('?')[0].split('&')[0];
             } else if (input.includes('youtube.com/watch')) {
-                try { videoId = new URLSearchParams(input.split('?')[1]).get("v") || ""; } catch(e) {}
+                try { return new URLSearchParams(input.split('?')[1]).get("v") || ""; } catch(e) {}
             }
+            return "";
+        }
+
+        function formatEmbedUrlWithAutoplay(input) {
+            const videoId = extractVideoId(input);
             if (videoId) {
-                let extra = isYouTubeSubscriber ? "&iv_load_policy=3&modestbranding=1" : "";
+                // Parâmetros otimizados para ocultar marcas e respeitar status premium de assinante
+                let extra = isYouTubeSubscriber ? "&iv_load_policy=3&modestbranding=1&controls=1" : "&controls=1";
                 return `https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1${extra}`;
             }
             return input.includes('autoplay=1') ? input : `${input}&autoplay=1`;
         }
 
-        // Função corrigida para garantir o autoplay completo ao abrir em nova aba
         function getWatchUrl(input) {
-            let videoId = "";
-            if (input.includes('<iframe')) {
-                const match = input.match(/src=["']([^"']+)["']/);
-                if (match && match[1]) input = match[1];
-            }
-            if (input.includes('youtube.com/embed/')) {
-                videoId = input.split('youtube.com/embed/')[1].split('?')[0].split('&')[0];
-            } else if (input.includes('youtu.be/')) {
-                videoId = input.split('youtu.be/')[1].split('?')[0];
-            } else if (input.includes('youtube.com/watch')) {
-                try { videoId = new URLSearchParams(input.split('?')[1]).get("v") || ""; } catch(e) {}
-            }
-            
+            const videoId = extractVideoId(input);
             if (videoId) {
                 return `https://www.youtube.com/watch?v=${videoId}&autoplay=1`;
-            }
-
-            // Se for URL limpa padrão
-            if (input.includes('watch?v=')) {
-                return input.includes('autoplay=1') ? input : `${input}&autoplay=1`;
             }
             return input.includes('autoplay=1') ? input : `${input}&autoplay=1`;
         }
@@ -370,13 +353,26 @@
             }
 
             filtered.forEach(song => {
-                const item = document.createElement('div');
-                const isSelected = song.id === selectedSongId;
                 const borderClass = song.isOriginal ? 'right-border-original' : 'right-border-standard';
-                item.className = `py-1.5 px-2 rounded-lg cursor-pointer bg-pastel-card dark:bg-darkpastel-card hover:bg-slate-50 dark:hover:bg-slate-800 flex flex-col border border-pastel-border dark:border-darkpastel-border ${borderClass} ${isSelected ? 'ring-2 ring-pastel-accent' : ''}`;
-                item.onclick = () => selectSong(song.id);
-                item.innerHTML = `<div class="font-bold text-xs text-slate-800 dark:text-slate-100 truncate">${escapeHtml(song.artist)}</div><div class="text-[10px] text-slate-500 truncate">${escapeHtml(song.title)}</div>`;
-                listEl.appendChild(item);
+                const isSelected = song.id === selectedSongId;
+                
+                if (openInNewTab) {
+                    // Renderiza como um link HTML nativo <a> para permitir o autoplay em nova aba garantido pelo navegador
+                    const watchUrl = getWatchUrl(song.url);
+                    const a = document.createElement('a');
+                    a.href = watchUrl;
+                    a.target = "_blank";
+                    a.className = `py-1.5 px-2 rounded-lg cursor-pointer bg-pastel-card dark:bg-darkpastel-card hover:bg-slate-50 dark:hover:bg-slate-800 flex flex-col border border-pastel-border dark:border-darkpastel-border ${borderClass} no-underline block`;
+                    a.innerHTML = `<div class="font-bold text-xs text-slate-800 dark:text-slate-100 truncate">${escapeHtml(song.artist)}</div><div class="text-[10px] text-slate-500 truncate">${escapeHtml(song.title)}</div>`;
+                    listEl.appendChild(a);
+                } else {
+                    // Renderiza como elemento clicável normal para carregar no embed interno
+                    const item = document.createElement('div');
+                    item.className = `py-1.5 px-2 rounded-lg cursor-pointer bg-pastel-card dark:bg-darkpastel-card hover:bg-slate-50 dark:hover:bg-slate-800 flex flex-col border border-pastel-border dark:border-darkpastel-border ${borderClass} ${isSelected ? 'ring-2 ring-pastel-accent' : ''}`;
+                    item.onclick = () => selectSong(song.id);
+                    item.innerHTML = `<div class="font-bold text-xs text-slate-800 dark:text-slate-100 truncate">${escapeHtml(song.artist)}</div><div class="text-[10px] text-slate-500 truncate">${escapeHtml(song.title)}</div>`;
+                    listEl.appendChild(item);
+                }
             });
         }
 
@@ -386,16 +382,10 @@
             selectedSongId = id;
             renderMenuList();
 
-            const embedUrl = formatEmbedUrlWithAutoplay(song.url);
-            const watchUrl = getWatchUrl(song.url);
+            if (!openInNewTab) {
+                const embedUrl = formatEmbedUrlWithAutoplay(song.url);
+                const watchUrl = getWatchUrl(song.url);
 
-            if (openInNewTab) {
-                window.open(watchUrl, '_blank');
-                document.getElementById('welcomeMessage').classList.remove('hidden');
-                document.getElementById('playerContainer').classList.add('hidden');
-                document.getElementById('welcomeMessage').querySelector('h2').innerText = `Aberto em Nova Aba`;
-                document.getElementById('welcomeMessage').querySelector('p').innerText = `"${song.artist} - ${song.title}" foi aberto no YouTube com autoplay.`;
-            } else {
                 document.getElementById('welcomeMessage').classList.add('hidden');
                 document.getElementById('playerContainer').classList.remove('hidden');
                 document.getElementById('playerTitle').innerText = `${song.artist} - ${song.title}`;
@@ -420,7 +410,7 @@
             isYouTubeSubscriber = !isYouTubeSubscriber;
             localStorage.setItem('voicekar_subscriber', isYouTubeSubscriber ? 'true' : 'false');
             updateSubscriberUI();
-            if (selectedSongId) selectSong(selectedSongId);
+            if (selectedSongId && !openInNewTab) selectSong(selectedSongId);
         }
 
         function loadSubscriberStatus() {
@@ -465,12 +455,13 @@
             saveSongs();
             document.getElementById('addForm').reset();
             closeModal('addModal');
-            selectSong(newSong.id);
+            if (!openInNewTab) selectSong(newSong.id);
         }
 
         function toggleOpenMode() {
             openInNewTab = document.getElementById('openModeSwitch').checked;
             localStorage.setItem('voicekar_openmode', openInNewTab ? 'tab' : 'content');
+            renderMenuList();
         }
 
         function loadOpenMode() {
