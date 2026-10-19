@@ -2,7 +2,7 @@
 <html lang="pt-BR" class="h-full">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>VoiceKar - Seu Karaoke & Vídeos</title>
     
     <!-- Favicon: Ícone de Microfone Lilás Escuro na Aba do Navegador -->
@@ -48,15 +48,21 @@
         }
     </script>
     <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
         body {
             transition: background-color 0.3s ease, color 0.3s ease;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
         ::-webkit-scrollbar {
-            width: 5px;
+            width: 4px;
         }
         ::-webkit-scrollbar-thumb {
             background: rgba(156, 163, 175, 0.4);
@@ -76,118 +82,119 @@
         }
     </style>
 </head>
-<body class="bg-pastel-bg text-pastel-text dark:bg-darkpastel-bg dark:text-darkpastel-text flex flex-col antialiased selection:bg-pastel-secondary selection:text-slate-800">
+<body class="bg-pastel-bg text-pastel-text dark:bg-darkpastel-bg dark:text-darkpastel-text antialiased selection:bg-pastel-secondary selection:text-slate-800">
 
-    <!-- Header / Barra de Título -->
-    <header class="bg-pastel-header dark:bg-darkpastel-header shadow-sm border-b border-pastel-border dark:border-darkpastel-border px-3 py-2 flex items-center justify-between gap-2 shrink-0 z-20">
-        <div class="flex items-center gap-2">
-            <div class="p-1.5 bg-white/70 dark:bg-slate-800/70 rounded-xl flex items-center justify-center shadow-xs">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-[#5E3A8C] dark:text-[#CBB2EE]" viewBox="0 0 24 24" fill="currentColor">
+    <!-- Header / Barra de Título (Espaçamento de 1px entre botões) -->
+    <header class="bg-pastel-header dark:bg-darkpastel-header shadow-sm border-b border-pastel-border dark:border-darkpastel-border px-2 py-1.5 flex items-center justify-between shrink-0 z-20">
+        <div class="flex items-center gap-1.5 overflow-hidden">
+            <div class="p-1 bg-white/70 dark:bg-slate-800/70 rounded-lg flex items-center justify-center shadow-xs shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#5E3A8C] dark:text-[#CBB2EE]" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3zm5-3a1 1 0 0 0-2 0 3 3 0 0 1-6 0 1 1 0 0 0-2 0 5 5 0 0 0 4 4.9V19H9a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-3.1A5 5 0 0 0 17 11z"/>
                 </svg>
             </div>
-            <h1 class="text-xl font-bold tracking-tight text-[#4A2E6E] dark:text-[#E8DFF5]">VoiceKar</h1>
+            <h1 class="text-base sm:text-lg font-bold tracking-tight text-[#4A2E6E] dark:text-[#E8DFF5] truncate">VoiceKar</h1>
         </div>
 
-        <div class="flex items-center gap-1.5 sm:gap-2">
+        <!-- Botões com espaçamento estrito de 1px (gap-[1px]) -->
+        <div class="flex items-center gap-[1px]">
             <!-- Botão Adicionar Vídeo -->
-            <button onclick="openModal('addModal')" title="Adicionar Vídeo" class="p-2 bg-pastel-primary hover:bg-pastel-primaryHover dark:bg-darkpastel-primary dark:hover:bg-darkpastel-primaryHover text-slate-800 dark:text-white rounded-lg transition-colors shadow-xs">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <button onclick="openModal('addModal')" title="Adicionar Vídeo" class="p-1.5 bg-pastel-primary hover:bg-pastel-primaryHover dark:bg-darkpastel-primary dark:hover:bg-darkpastel-primaryHover text-slate-800 dark:text-white rounded-md transition-colors shadow-xs">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                 </svg>
             </button>
 
             <!-- Botão Importar / Exportar -->
-            <button onclick="openModal('ioModal')" title="Exportar / Importar JSON" class="p-2 bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 border border-pastel-border dark:border-darkpastel-border rounded-lg text-slate-700 dark:text-slate-200 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <button onclick="openModal('ioModal')" title="Exportar / Importar JSON" class="p-1.5 bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 border border-pastel-border dark:border-darkpastel-border rounded-md text-slate-700 dark:text-slate-200 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                 </svg>
             </button>
 
             <!-- Botão Tema -->
-            <button onclick="toggleTheme()" id="themeBtn" title="Alternar Tema Claro/Escuro" class="p-2 bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 border border-pastel-border dark:border-darkpastel-border rounded-lg text-slate-700 dark:text-slate-200 transition-colors">
-                <svg id="themeIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <button onclick="toggleTheme()" id="themeBtn" title="Alternar Tema" class="p-1.5 bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 border border-pastel-border dark:border-darkpastel-border rounded-md text-slate-700 dark:text-slate-200 transition-colors">
+                <svg id="themeIcon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                 </svg>
             </button>
 
             <!-- Botão Ajuda -->
-            <button onclick="openModal('helpModal')" title="Ajuda" class="p-2 bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 border border-pastel-border dark:border-darkpastel-border rounded-lg text-slate-700 dark:text-slate-200 font-bold transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <button onclick="openModal('helpModal')" title="Ajuda" class="p-1.5 bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 border border-pastel-border dark:border-darkpastel-border rounded-md text-slate-700 dark:text-slate-200 font-bold transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
             </button>
 
             <!-- Botão Status Assinante YouTube -->
-            <button onclick="toggleYouTubeSubscriber()" id="subStatusBtn" title="Status de Assinante YouTube" class="p-2 bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 border border-pastel-border dark:border-darkpastel-border rounded-lg text-slate-700 dark:text-slate-200 transition-colors flex items-center justify-center">
-                <svg id="subIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <button onclick="toggleYouTubeSubscriber()" id="subStatusBtn" title="Status de Assinante YouTube" class="p-1.5 bg-white/60 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 border border-pastel-border dark:border-darkpastel-border rounded-md text-slate-700 dark:text-slate-200 transition-colors flex items-center justify-center">
+                <svg id="subIcon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
             </button>
 
-            <!-- Switch Button sem palavras ou ícones laterais -->
-            <div class="flex items-center bg-white/60 dark:bg-slate-800/60 px-2 py-1.5 rounded-lg border border-pastel-border dark:border-darkpastel-border" title="Abrir no Conteúdo vs Nova Aba">
+            <!-- Switch Button -->
+            <div class="flex items-center bg-white/60 dark:bg-slate-800/60 px-1.5 py-1 rounded-md border border-pastel-border dark:border-darkpastel-border">
                 <label class="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" id="openModeSwitch" onchange="toggleOpenMode()" class="sr-only peer">
-                    <div class="w-8 h-4 bg-gray-300 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:peer-checked:bg-pastel-accent"></div>
+                    <div class="w-7 h-3.5 bg-gray-300 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-2.5 after:w-2.5 after:transition-all dark:peer-checked:bg-pastel-accent"></div>
                 </label>
             </div>
         </div>
     </header>
 
-    <!-- Layout Principal com adaptação rigida para paisagem/retrato -->
-    <div class="flex-1 flex flex-col md:flex-row overflow-hidden" style="height: calc(100vh - 53px);">
+    <!-- Layout Principal Adaptado sem cortes para Retrato e Paisagem -->
+    <div class="flex-1 flex flex-col md:flex-row overflow-hidden w-full">
         
         <!-- Menu Lateral -->
-        <aside class="w-full md:w-[28%] lg:w-[30%] bg-pastel-card/50 dark:bg-darkpastel-card/50 border-r border-pastel-border dark:border-darkpastel-border flex flex-col h-[30vh] md:h-full overflow-hidden shrink-0">
-            <div class="p-2 border-b border-pastel-border dark:border-darkpastel-border bg-pastel-card dark:bg-darkpastel-card shrink-0">
+        <aside class="w-full md:w-[28%] lg:w-[30%] bg-pastel-card/50 dark:bg-darkpastel-card/50 border-r border-pastel-border dark:border-darkpastel-border flex flex-col h-[32vh] md:h-full overflow-hidden shrink-0">
+            <div class="p-1.5 border-b border-pastel-border dark:border-darkpastel-border bg-pastel-card dark:bg-darkpastel-card shrink-0">
                 <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-2.5 pointer-events-none text-gray-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none text-gray-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                     </span>
-                    <input type="text" id="searchInput" oninput="renderMenuList()" placeholder="Buscar..." class="w-full pl-8 pr-2 py-1 text-xs sm:text-sm rounded-md bg-pastel-bg dark:bg-darkpastel-bg border border-pastel-border dark:border-darkpastel-border focus:outline-none focus:ring-1 focus:ring-pastel-accent">
+                    <input type="text" id="searchInput" oninput="renderMenuList()" placeholder="Buscar..." class="w-full pl-7 pr-2 py-1 text-xs rounded-md bg-pastel-bg dark:bg-darkpastel-bg border border-pastel-border dark:border-darkpastel-border focus:outline-none focus:ring-1 focus:ring-pastel-accent">
                 </div>
             </div>
-            <div class="flex-1 overflow-y-auto p-1.5 space-y-1.5" id="songList"></div>
+            <div class="flex-1 overflow-y-auto p-1.5 space-y-1" id="songList"></div>
         </aside>
 
         <!-- Área de Conteúdo -->
-        <main class="flex-1 flex flex-col bg-pastel-bg dark:bg-darkpastel-bg p-2 sm:p-3 overflow-hidden" id="contentArea">
-            <div id="welcomeMessage" class="flex-1 flex flex-col items-center justify-center text-center p-4 text-gray-500 dark:text-gray-400 space-y-2">
-                <div class="p-3 bg-pastel-accent/20 dark:bg-darkpastel-accent/20 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-slate-600 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <main class="flex-1 flex flex-col bg-pastel-bg dark:bg-darkpastel-bg p-2 overflow-hidden w-full" id="contentArea">
+            <div id="welcomeMessage" class="flex-1 flex flex-col items-center justify-center text-center p-3 text-gray-500 dark:text-gray-400 space-y-2">
+                <div class="p-2.5 bg-pastel-accent/20 dark:bg-darkpastel-accent/20 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-slate-600 dark:text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
-                <h2 class="text-lg font-semibold text-slate-800 dark:text-slate-200">Selecione uma música no menu</h2>
-                <p class="max-w-md text-xs sm:text-sm">Clique em um item da lista lateral para carregar o vídeo incorporado em tela inteira com reprodução automática.</p>
+                <h2 class="text-base font-semibold text-slate-800 dark:text-slate-200">Selecione uma música no menu</h2>
+                <p class="max-w-md text-xs">Clique em um item da lista lateral para carregar o vídeo incorporado em tela inteira com reprodução automática.</p>
             </div>
 
-            <div id="playerContainer" class="hidden flex-1 flex flex-col w-full h-full overflow-hidden space-y-2">
-                <div class="bg-pastel-card dark:bg-darkpastel-card px-3 py-2 rounded-lg border border-pastel-border dark:border-darkpastel-border shadow-2xs flex items-center justify-between gap-2 shrink-0">
-                    <div class="flex items-center gap-2 overflow-hidden">
-                        <h2 id="playerTitle" class="text-sm sm:text-base font-bold text-slate-800 dark:text-slate-100 truncate"></h2>
-                        <span id="playbackBadge" class="text-[10px] sm:text-xs px-2 py-0.5 rounded-full font-medium shrink-0"></span>
-                        <span id="subscriberBadge" class="hidden text-[10px] sm:text-xs px-2 py-0.5 rounded-full font-bold bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300 shrink-0">Premium YouTube</span>
+            <div id="playerContainer" class="hidden flex-1 flex flex-col w-full h-full overflow-hidden space-y-1.5">
+                <div class="bg-pastel-card dark:bg-darkpastel-card px-2.5 py-1.5 rounded-lg border border-pastel-border dark:border-darkpastel-border shadow-2xs flex items-center justify-between gap-2 shrink-0">
+                    <div class="flex items-center gap-1.5 overflow-hidden">
+                        <h2 id="playerTitle" class="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 truncate"></h2>
+                        <span id="playbackBadge" class="text-[10px] px-1.5 py-0.5 rounded-full font-medium shrink-0"></span>
+                        <span id="subscriberBadge" class="hidden text-[10px] px-1.5 py-0.5 rounded-full font-bold bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300 shrink-0">Premium</span>
                     </div>
-                    <div class="flex items-center gap-2 shrink-0">
-                        <a id="externalLinkBtn" href="#" target="_blank" title="Abrir diretamente no YouTube" class="p-1 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <a id="externalLinkBtn" href="#" target="_blank" title="Abrir no YouTube" class="p-1 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 rounded">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                             </svg>
                         </a>
-                        <button onclick="deleteCurrentSong()" title="Excluir" class="p-1 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <button onclick="deleteCurrentSong()" title="Excluir" class="p-1 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
                         </button>
                     </div>
                 </div>
 
-                <div class="flex-1 w-full h-full rounded-xl overflow-hidden shadow-md border border-pastel-border dark:border-darkpastel-border bg-black relative">
+                <div class="flex-1 w-full h-full rounded-lg overflow-hidden shadow-md border border-pastel-border dark:border-darkpastel-border bg-black relative">
                     <iframe id="youtubeIframe" class="w-full h-full border-0 absolute inset-0" src="" title="YouTube Video Embed" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                 </div>
             </div>
@@ -195,62 +202,71 @@
     </div>
 
     <!-- MODAL: Adicionar Vídeo -->
-    <div id="addModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
-        <div class="bg-pastel-card dark:bg-darkpastel-card rounded-2xl max-w-md w-full p-5 border border-pastel-border dark:border-darkpastel-border shadow-xl">
-            <h3 class="text-base font-bold text-slate-800 dark:text-slate-100 mb-3">Adicionar Novo Vídeo</h3>
-            <form id="addForm" onsubmit="handleAddSong(event)" class="space-y-3">
+    <div id="addModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs hidden items-center justify-center p-3 z-50">
+        <div class="bg-pastel-card dark:bg-darkpastel-card rounded-2xl max-w-md w-full p-4 border border-pastel-border dark:border-darkpastel-border shadow-xl">
+            <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100 mb-2.5">Adicionar Novo Vídeo</h3>
+            <form id="addForm" onsubmit="handleAddSong(event)" class="space-y-2.5">
                 <div>
-                    <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Nome do Cantor / Banda</label>
-                    <input type="text" id="inputArtist" required placeholder="Ex: Adele" class="w-full px-3 py-1.5 rounded-lg bg-pastel-bg dark:bg-darkpastel-bg border border-pastel-border dark:border-darkpastel-border text-sm">
+                    <label class="block text-[11px] font-semibold uppercase text-gray-500 mb-0.5">Nome do Cantor / Banda</label>
+                    <input type="text" id="inputArtist" required placeholder="Ex: Adele" class="w-full px-2.5 py-1 rounded-lg bg-pastel-bg dark:bg-darkpastel-bg border border-pastel-border dark:border-darkpastel-border text-xs">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Nome da Música</label>
-                    <input type="text" id="inputTitle" required placeholder="Ex: Set Fire To The Rain" class="w-full px-3 py-1.5 rounded-lg bg-pastel-bg dark:bg-darkpastel-bg border border-pastel-border dark:border-darkpastel-border text-sm">
+                    <label class="block text-[11px] font-semibold uppercase text-gray-500 mb-0.5">Nome da Música</label>
+                    <input type="text" id="inputTitle" required placeholder="Ex: Set Fire To The Rain" class="w-full px-2.5 py-1 rounded-lg bg-pastel-bg dark:bg-darkpastel-bg border border-pastel-border dark:border-darkpastel-border text-xs">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold uppercase text-gray-500 mb-1">Link do Vídeo</label>
-                    <input type="text" id="inputUrl" required placeholder="https://www.youtube.com/watch?v=..." class="w-full px-3 py-1.5 rounded-lg bg-pastel-bg dark:bg-darkpastel-bg border border-pastel-border dark:border-darkpastel-border text-sm">
+                    <label class="block text-[11px] font-semibold uppercase text-gray-500 mb-0.5">Link do Vídeo</label>
+                    <input type="text" id="inputUrl" required placeholder="https://www.youtube.com/watch?v=..." class="w-full px-2.5 py-1 rounded-lg bg-pastel-bg dark:bg-darkpastel-bg border border-pastel-border dark:border-darkpastel-border text-xs">
                 </div>
-                <div class="flex items-center gap-2 pt-1">
+                <div class="flex items-center gap-2 pt-0.5">
                     <input type="checkbox" id="inputOriginal" class="w-4 h-4 rounded text-pastel-primary border-gray-300">
                     <label for="inputOriginal" class="text-xs text-slate-700 dark:text-slate-300 font-medium">Playback Original?</label>
                 </div>
-                <div class="flex justify-end gap-2 pt-3">
-                    <button type="button" onclick="closeModal('addModal')" class="px-3 py-1.5 text-xs rounded-lg bg-pastel-bg dark:bg-darkpastel-bg text-slate-700 dark:text-slate-300">Cancelar</button>
-                    <button type="submit" class="px-4 py-1.5 text-xs rounded-lg bg-pastel-primary dark:bg-darkpastel-primary text-slate-800 dark:text-white font-medium">Salvar</button>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeModal('addModal')" class="px-3 py-1 text-xs rounded-lg bg-pastel-bg dark:bg-darkpastel-bg text-slate-700 dark:text-slate-300">Cancelar</button>
+                    <button type="submit" class="px-3 py-1 text-xs rounded-lg bg-pastel-primary dark:bg-darkpastel-primary text-slate-800 dark:text-white font-medium">Salvar</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- MODAL: Exportar / Importar JSON -->
-    <div id="ioModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
-        <div class="bg-pastel-card dark:bg-darkpastel-card rounded-2xl max-w-md w-full p-5 border border-pastel-border dark:border-darkpastel-border shadow-xl space-y-4">
-            <h3 class="text-base font-bold text-slate-800 dark:text-slate-100">Exportar / Importar JSON</h3>
-            <div class="p-3 bg-pastel-bg dark:bg-darkpastel-bg rounded-xl border border-pastel-border dark:border-darkpastel-border space-y-1.5">
+    <div id="ioModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs hidden items-center justify-center p-3 z-50">
+        <div class="bg-pastel-card dark:bg-darkpastel-card rounded-2xl max-w-md w-full p-4 border border-pastel-border dark:border-darkpastel-border shadow-xl space-y-3">
+            <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">Exportar / Importar JSON</h3>
+            <div class="p-2.5 bg-pastel-bg dark:bg-darkpastel-bg rounded-xl border border-pastel-border dark:border-darkpastel-border">
                 <button onclick="exportJSON()" class="w-full py-1.5 bg-pastel-accent/30 text-slate-800 dark:text-slate-100 font-medium text-xs rounded-lg">Baixar Arquivo JSON</button>
             </div>
-            <div class="p-3 bg-pastel-bg dark:bg-darkpastel-bg rounded-xl border border-pastel-border dark:border-darkpastel-border space-y-1.5">
+            <div class="p-2.5 bg-pastel-bg dark:bg-darkpastel-bg rounded-xl border border-pastel-border dark:border-darkpastel-border">
                 <input type="file" id="importFile" accept=".json" class="hidden" onchange="importJSON(event)">
                 <button onclick="document.getElementById('importFile').click()" class="w-full py-1.5 bg-pastel-secondary/30 text-slate-800 dark:text-slate-100 font-medium text-xs rounded-lg">Carregar Arquivo JSON</button>
             </div>
             <div class="flex justify-end pt-1">
-                <button onclick="closeModal('ioModal')" class="px-3 py-1.5 text-xs rounded-lg bg-pastel-bg dark:bg-darkpastel-bg text-slate-700">Fechar</button>
+                <button onclick="closeModal('ioModal')" class="px-3 py-1 text-xs rounded-lg bg-pastel-bg dark:bg-darkpastel-bg text-slate-700">Fechar</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL: Ajuda -->
-    <div id="helpModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
-        <div class="bg-pastel-card dark:bg-darkpastel-card rounded-2xl max-w-md w-full p-5 border border-pastel-border dark:border-darkpastel-border shadow-xl space-y-3">
-            <h3 class="text-base font-bold text-slate-800 dark:text-slate-100">Ajuda do VoiceKar</h3>
+    <!-- MODAL: Ajuda (Atualizado com instruções de inserção de itens) -->
+    <div id="helpModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs hidden items-center justify-center p-3 z-50">
+        <div class="bg-pastel-card dark:bg-darkpastel-card rounded-2xl max-w-md w-full p-4 border border-pastel-border dark:border-darkpastel-border shadow-xl space-y-2.5 max-h-[90vh] overflow-y-auto">
+            <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">Ajuda do VoiceKar</h3>
             <div class="space-y-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                <p>• <b>Borda Lateral:</b> Verde = Playback Original, Cinza = Padrão.</p>
-                <p>• <b>Switch de Abertura:</b> Desligado carrega no embed com autoplay; Ligado abre o vídeo diretamente em uma nova aba com reprodução automática.</p>
-                <p>• <b>Assinante YouTube:</b> Clique no ícone de escudo na barra de topo para ativar o modo de assinante YouTube.</p>
+                <div class="p-2 bg-pastel-bg dark:bg-darkpastel-bg rounded-lg">
+                    <strong class="text-slate-800 dark:text-slate-100">Como Adicionar Itens ao Menu:</strong>
+                    <p class="mt-0.5">Clique no botão com o ícone de adição (+) na barra superior. Na janela que se abrir, preencha o <b>Nome do Cantor/Banda</b>, o <b>Nome da Música</b> e o <b>Link do Vídeo</b> do YouTube. Marque a caixa <i>"Playback original?"</i> se desejar que o item receba a borda indicativa verde. Ao salvar, o item será inserido automaticamente na ordem alfabética correta na lista lateral.</p>
+                </div>
+                <div class="p-2 bg-pastel-bg dark:bg-darkpastel-bg rounded-lg">
+                    <strong class="text-slate-800 dark:text-slate-100">Borda Lateral:</strong>
+                    <p class="mt-0.5"><span class="text-emerald-500 font-bold">Verde</span> = Playback Original. <span class="text-gray-400 font-bold">Cinza</span> = Playback Padrão.</p>
+                </div>
+                <div class="p-2 bg-pastel-bg dark:bg-darkpastel-bg rounded-lg">
+                    <strong class="text-slate-800 dark:text-slate-100">Switch de Abertura:</strong>
+                    <p class="mt-0.5">Desligado = Abre o vídeo incorporado na área de conteúdo com autoplay. Ligado = Abre o vídeo em uma nova aba do navegador com autoplay forçado.</p>
+                </div>
             </div>
-            <div class="flex justify-end pt-2">
-                <button onclick="closeModal('helpModal')" class="px-4 py-1.5 text-xs rounded-lg bg-pastel-primary text-slate-800 font-medium">Fechar</button>
+            <div class="flex justify-end pt-1">
+                <button onclick="closeModal('helpModal')" class="px-3 py-1 text-xs rounded-lg bg-pastel-primary text-slate-800 font-medium">Fechar</button>
             </div>
         </div>
     </div>
@@ -310,19 +326,34 @@
                 try { videoId = new URLSearchParams(input.split('?')[1]).get("v") || ""; } catch(e) {}
             }
             if (videoId) {
-                // Se for assinante, adiciona parâmetros de otimização premium
                 let extra = isYouTubeSubscriber ? "&iv_load_policy=3&modestbranding=1" : "";
                 return `https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1${extra}`;
             }
             return input.includes('autoplay=1') ? input : `${input}&autoplay=1`;
         }
 
+        // Função corrigida para garantir o autoplay completo ao abrir em nova aba
         function getWatchUrl(input) {
-            const embedUrl = formatEmbedUrlWithAutoplay(input);
-            if (embedUrl.includes('/embed/')) {
-                const id = embedUrl.split('/embed/')[1].split('?')[0];
-                // Adiciona autoplay=1 para abrir em nova aba com reprodução automática
-                return `https://www.youtube.com/watch?v=${id}&autoplay=1`;
+            let videoId = "";
+            if (input.includes('<iframe')) {
+                const match = input.match(/src=["']([^"']+)["']/);
+                if (match && match[1]) input = match[1];
+            }
+            if (input.includes('youtube.com/embed/')) {
+                videoId = input.split('youtube.com/embed/')[1].split('?')[0].split('&')[0];
+            } else if (input.includes('youtu.be/')) {
+                videoId = input.split('youtu.be/')[1].split('?')[0];
+            } else if (input.includes('youtube.com/watch')) {
+                try { videoId = new URLSearchParams(input.split('?')[1]).get("v") || ""; } catch(e) {}
+            }
+            
+            if (videoId) {
+                return `https://www.youtube.com/watch?v=${videoId}&autoplay=1`;
+            }
+
+            // Se for URL limpa padrão
+            if (input.includes('watch?v=')) {
+                return input.includes('autoplay=1') ? input : `${input}&autoplay=1`;
             }
             return input.includes('autoplay=1') ? input : `${input}&autoplay=1`;
         }
@@ -342,9 +373,9 @@
                 const item = document.createElement('div');
                 const isSelected = song.id === selectedSongId;
                 const borderClass = song.isOriginal ? 'right-border-original' : 'right-border-standard';
-                item.className = `py-1.5 px-2.5 rounded-lg cursor-pointer bg-pastel-card dark:bg-darkpastel-card hover:bg-slate-50 dark:hover:bg-slate-800 flex flex-col border border-pastel-border dark:border-darkpastel-border ${borderClass} ${isSelected ? 'ring-2 ring-pastel-accent' : ''}`;
+                item.className = `py-1.5 px-2 rounded-lg cursor-pointer bg-pastel-card dark:bg-darkpastel-card hover:bg-slate-50 dark:hover:bg-slate-800 flex flex-col border border-pastel-border dark:border-darkpastel-border ${borderClass} ${isSelected ? 'ring-2 ring-pastel-accent' : ''}`;
                 item.onclick = () => selectSong(song.id);
-                item.innerHTML = `<div class="font-bold text-xs text-slate-800 dark:text-slate-100 truncate">${escapeHtml(song.artist)}</div><div class="text-[11px] text-slate-500 truncate">${escapeHtml(song.title)}</div>`;
+                item.innerHTML = `<div class="font-bold text-xs text-slate-800 dark:text-slate-100 truncate">${escapeHtml(song.artist)}</div><div class="text-[10px] text-slate-500 truncate">${escapeHtml(song.title)}</div>`;
                 listEl.appendChild(item);
             });
         }
@@ -372,7 +403,7 @@
                 
                 const badge = document.getElementById('playbackBadge');
                 badge.innerText = song.isOriginal ? 'Original' : 'Padrão';
-                badge.className = song.isOriginal ? 'text-[10px] px-2 py-0.5 rounded-full font-bold bg-emerald-100 text-emerald-800' : 'text-[10px] px-2 py-0.5 rounded-full font-bold bg-gray-200 text-gray-700';
+                badge.className = song.isOriginal ? 'text-[10px] px-1.5 py-0.5 rounded-full font-bold bg-emerald-100 text-emerald-800' : 'text-[10px] px-1.5 py-0.5 rounded-full font-bold bg-gray-200 text-gray-700';
 
                 const subBadge = document.getElementById('subscriberBadge');
                 if (isYouTubeSubscriber) {
