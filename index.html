@@ -230,6 +230,35 @@
         </div>
     </div>
 
+    <!-- MODAL: Editar Vídeo -->
+    <div id="editModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs hidden items-center justify-center p-3 z-50">
+        <div class="bg-pastel-card dark:bg-darkpastel-card rounded-2xl max-w-md w-full p-4 border border-pastel-border dark:border-darkpastel-border shadow-xl">
+            <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100 mb-2.5">Editar Item do Menu</h3>
+            <form id="editForm" onsubmit="handleEditSong(event)" class="space-y-2.5">
+                <div>
+                    <label class="block text-[11px] font-semibold uppercase text-gray-500 mb-0.5">Nome do Cantor / Banda</label>
+                    <input type="text" id="editArtist" required placeholder="Ex: Adele" class="w-full px-2.5 py-1 rounded-lg bg-pastel-bg dark:bg-darkpastel-bg border border-pastel-border dark:border-darkpastel-border text-xs">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold uppercase text-gray-500 mb-0.5">Nome da Música</label>
+                    <input type="text" id="editTitle" required placeholder="Ex: Set Fire To The Rain" class="w-full px-2.5 py-1 rounded-lg bg-pastel-bg dark:bg-darkpastel-bg border border-pastel-border dark:border-darkpastel-border text-xs">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-semibold uppercase text-gray-500 mb-0.5">Link do Vídeo</label>
+                    <input type="text" id="editUrl" required placeholder="https://www.youtube.com/watch?v=..." class="w-full px-2.5 py-1 rounded-lg bg-pastel-bg dark:bg-darkpastel-bg border border-pastel-border dark:border-darkpastel-border text-xs">
+                </div>
+                <div class="flex items-center gap-2 pt-0.5">
+                    <input type="checkbox" id="editOriginal" class="w-4 h-4 rounded text-pastel-primary border-gray-300">
+                    <label for="editOriginal" class="text-xs text-slate-700 dark:text-slate-300 font-medium">Playback Original?</label>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeModal('editModal')" class="px-3 py-1 text-xs rounded-lg bg-pastel-bg dark:bg-darkpastel-bg text-slate-700 dark:text-slate-300">Cancelar</button>
+                    <button type="submit" class="px-3 py-1 text-xs rounded-lg bg-pastel-primary dark:bg-darkpastel-primary text-slate-800 dark:text-white font-medium">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- MODAL: Exportar / Importar JSON -->
     <div id="ioModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs hidden items-center justify-center p-3 z-50">
         <div class="bg-pastel-card dark:bg-darkpastel-card rounded-2xl max-w-md w-full p-4 border border-pastel-border dark:border-darkpastel-border shadow-xl space-y-3">
@@ -250,19 +279,16 @@
     <!-- MODAL: Ajuda -->
     <div id="helpModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs hidden items-center justify-center p-3 z-50">
         <div class="bg-pastel-card dark:bg-darkpastel-card rounded-2xl max-w-md w-full p-4 border border-pastel-border dark:border-darkpastel-border shadow-xl space-y-2.5 max-h-[90vh] overflow-y-auto">
-            <h3 class="text-sm font-bold text-slate-800 dark:text-slate-100">Ajuda do VoiceKar</h3>
-            <div class="space-y-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                <div class="p-2 bg-pastel-bg dark:bg-darkpastel-bg rounded-lg">
-                    <strong class="text-slate-800 dark:text-slate-100">Como Adicionar Itens ao Menu:</strong>
-                    <p class="mt-0.5">Clique no botão com o ícone de adição (+) na barra superior. Preencha os dados e salve. O item será inserido automaticamente em ordem alfabética.</p>
-                </div>
-                <div class="p-2 bg-pastel-bg dark:bg-darkpastel-bg rounded-lg">
-                    <strong class="text-slate-800 dark:text-slate-100">Modo de Abertura (Switch):</strong>
-                    <p class="mt-0.5">Desligado = Abre o vídeo incorporado na área de conteúdo. Ligado = Abre diretamente em nova aba do navegador com clique nativo (permitindo autoplay irrestrito).</p>
-                </div>
+            <div class="flex items-center justify-between gap-2">
+                <h3 id="helpTitle" class="text-sm font-bold text-slate-800 dark:text-slate-100">Ajuda do VoiceKar</h3>
+                <label class="flex items-center gap-1.5 cursor-pointer text-[11px] font-medium text-slate-600 dark:text-slate-300 shrink-0 select-none">
+                    <input type="checkbox" id="helpLangSwitch" onchange="toggleHelpLang()" class="w-3.5 h-3.5 rounded text-pastel-primary border-gray-300">
+                    <span id="helpLangLabel">Translate to English</span>
+                </label>
             </div>
+            <div id="helpContent" class="space-y-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed"></div>
             <div class="flex justify-end pt-1">
-                <button onclick="closeModal('helpModal')" class="px-3 py-1 text-xs rounded-lg bg-pastel-primary text-slate-800 font-medium">Fechar</button>
+                <button id="helpCloseBtn" onclick="closeModal('helpModal')" class="px-3 py-1 text-xs rounded-lg bg-pastel-primary text-slate-800 font-medium">Fechar</button>
             </div>
         </div>
     </div>
@@ -275,9 +301,11 @@
 
         let songs = [];
         let selectedSongId = null;
+        let editingSongId = null;
         let isDarkMode = false;
         let openInNewTab = false;
         let isYouTubeSubscriber = false;
+        let helpLang = 'pt';
 
         window.onload = function() {
             loadTheme();
@@ -285,6 +313,7 @@
             loadSubscriberStatus();
             loadSongs();
             renderMenuList();
+            renderHelp();
         };
 
         function loadSongs() {
@@ -355,24 +384,38 @@
             filtered.forEach(song => {
                 const borderClass = song.isOriginal ? 'right-border-original' : 'right-border-standard';
                 const isSelected = song.id === selectedSongId;
-                
+                const titleHtml = `<div class="font-bold text-xs text-slate-800 dark:text-slate-100 truncate">${escapeHtml(song.artist)}</div><div class="text-[10px] text-slate-500 truncate">${escapeHtml(song.title)}</div>`;
+
+                const wrapper = document.createElement('div');
+                wrapper.className = `rounded-lg bg-pastel-card dark:bg-darkpastel-card hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center border border-pastel-border dark:border-darkpastel-border ${borderClass} ${(isSelected && !openInNewTab) ? 'ring-2 ring-pastel-accent' : ''}`;
+
                 if (openInNewTab) {
-                    // Renderiza como um link HTML nativo <a> para permitir o autoplay em nova aba garantido pelo navegador
+                    // Área clicável como link nativo <a> para autoplay garantido em nova aba
                     const watchUrl = getWatchUrl(song.url);
                     const a = document.createElement('a');
                     a.href = watchUrl;
                     a.target = "_blank";
-                    a.className = `py-1.5 px-2 rounded-lg cursor-pointer bg-pastel-card dark:bg-darkpastel-card hover:bg-slate-50 dark:hover:bg-slate-800 flex flex-col border border-pastel-border dark:border-darkpastel-border ${borderClass} no-underline block`;
-                    a.innerHTML = `<div class="font-bold text-xs text-slate-800 dark:text-slate-100 truncate">${escapeHtml(song.artist)}</div><div class="text-[10px] text-slate-500 truncate">${escapeHtml(song.title)}</div>`;
-                    listEl.appendChild(a);
+                    a.className = `flex-1 min-w-0 py-1.5 px-2 cursor-pointer no-underline`;
+                    a.innerHTML = titleHtml;
+                    wrapper.appendChild(a);
                 } else {
-                    // Renderiza como elemento clicável normal para carregar no embed interno
-                    const item = document.createElement('div');
-                    item.className = `py-1.5 px-2 rounded-lg cursor-pointer bg-pastel-card dark:bg-darkpastel-card hover:bg-slate-50 dark:hover:bg-slate-800 flex flex-col border border-pastel-border dark:border-darkpastel-border ${borderClass} ${isSelected ? 'ring-2 ring-pastel-accent' : ''}`;
-                    item.onclick = () => selectSong(song.id);
-                    item.innerHTML = `<div class="font-bold text-xs text-slate-800 dark:text-slate-100 truncate">${escapeHtml(song.artist)}</div><div class="text-[10px] text-slate-500 truncate">${escapeHtml(song.title)}</div>`;
-                    listEl.appendChild(item);
+                    // Área clicável normal para carregar no embed interno
+                    const clickArea = document.createElement('div');
+                    clickArea.className = `flex-1 min-w-0 py-1.5 px-2 cursor-pointer`;
+                    clickArea.onclick = () => selectSong(song.id);
+                    clickArea.innerHTML = titleHtml;
+                    wrapper.appendChild(clickArea);
                 }
+
+                // Botão de edição (ícone de lápis)
+                const editBtn = document.createElement('button');
+                editBtn.title = 'Editar';
+                editBtn.className = `shrink-0 p-1 mr-1 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 rounded`;
+                editBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>`;
+                editBtn.onclick = (ev) => { ev.preventDefault(); ev.stopPropagation(); openEditModal(song.id); };
+                wrapper.appendChild(editBtn);
+
+                listEl.appendChild(wrapper);
             });
         }
 
@@ -456,6 +499,88 @@
             document.getElementById('addForm').reset();
             closeModal('addModal');
             if (!openInNewTab) selectSong(newSong.id);
+        }
+
+        function openEditModal(id) {
+            const song = songs.find(s => s.id === id);
+            if (!song) return;
+            editingSongId = id;
+            document.getElementById('editArtist').value = song.artist;
+            document.getElementById('editTitle').value = song.title;
+            document.getElementById('editUrl').value = song.url;
+            document.getElementById('editOriginal').checked = !!song.isOriginal;
+            openModal('editModal');
+        }
+
+        function handleEditSong(e) {
+            e.preventDefault();
+            const song = songs.find(s => s.id === editingSongId);
+            if (!song) return;
+            const artist = document.getElementById('editArtist').value.trim();
+            const title = document.getElementById('editTitle').value.trim();
+            const rawUrl = document.getElementById('editUrl').value.trim();
+            const isOriginal = document.getElementById('editOriginal').checked;
+            if (!artist || !title || !rawUrl) return;
+            song.artist = artist;
+            song.title = title;
+            song.url = formatEmbedUrlWithAutoplay(rawUrl);
+            song.isOriginal = isOriginal;
+            saveSongs();
+            closeModal('editModal');
+            if (selectedSongId === editingSongId && !openInNewTab) selectSong(editingSongId);
+            editingSongId = null;
+        }
+
+        const helpTexts = {
+            pt: {
+                title: "Ajuda do VoiceKar",
+                close: "Fechar",
+                langLabel: "Translate to English",
+                sections: [
+                    { h: "Como Adicionar Itens ao Menu", p: "Clique no bot\u00e3o com o \u00edcone de adi\u00e7\u00e3o (+) na barra superior. Informe o cantor/banda, o nome da m\u00fasica e o link do v\u00eddeo (YouTube) e salve. O item \u00e9 inserido automaticamente em ordem alfab\u00e9tica no menu lateral." },
+                    { h: "Como Editar Itens do Menu", p: "Cada item do menu possui um \u00edcone de l\u00e1pis \u270f\ufe0f \u00e0 direita. Clique nele para abrir a janela de edi\u00e7\u00e3o, altere o cantor/banda, o nome da m\u00fasica, o link ou o tipo de playback e salve. A lista \u00e9 reordenada automaticamente." },
+                    { h: "Como Excluir Itens", p: "Selecione a m\u00fasica no menu para abrir o player e clique no \u00edcone de lixeira (vermelho) no topo da \u00e1rea de reprodu\u00e7\u00e3o para remover o item." },
+                    { h: "Busca", p: "Use o campo 'Buscar...' no topo do menu lateral para filtrar itens pelo nome do cantor/banda ou da m\u00fasica em tempo real." },
+                    { h: "Playback Original x Padr\u00e3o", p: "Ao adicionar ou editar, marque 'Playback Original?' para sinalizar a vers\u00e3o oficial. Itens originais exibem uma borda verde \u00e0 direita; os demais, uma borda cinza." },
+                    { h: "Modo de Abertura (Switch)", p: "Desligado = abre o v\u00eddeo incorporado na \u00e1rea de conte\u00fado. Ligado = abre diretamente em nova aba do navegador com clique nativo (permitindo autoplay irrestrito)." },
+                    { h: "Status de Assinante do YouTube", p: "O bot\u00e3o com \u00edcone de escudo alterna o modo assinante (Premium). Quando ativo, o player usa par\u00e2metros que reduzem marcas/sobreposi\u00e7\u00f5es e exibe o selo 'Premium'." },
+                    { h: "Tema Claro / Escuro", p: "Use o bot\u00e3o de tema (lua/sol) para alternar entre os modos claro e escuro. Sua prefer\u00eancia fica salva no navegador." },
+                    { h: "Exportar / Importar JSON", p: "Pelo bot\u00e3o de importar/exportar voc\u00ea pode baixar todo o seu acervo em um arquivo JSON (backup) ou carregar um arquivo JSON para restaurar/substituir a lista atual." },
+                    { h: "Navegador Recomendado", p: "Este aplicativo funciona melhor no Google Chrome. Para a melhor experi\u00eancia de reprodu\u00e7\u00e3o e autoplay, recomendamos abri-lo no Google Chrome." }
+                ]
+            },
+            en: {
+                title: "VoiceKar Help",
+                close: "Close",
+                langLabel: "Traduzir para portugu\u00eas",
+                sections: [
+                    { h: "How to Add Items to the Menu", p: "Click the add (+) button in the top bar. Enter the singer/band, the song name and the video link (YouTube), then save. The item is automatically inserted in alphabetical order in the side menu." },
+                    { h: "How to Edit Menu Items", p: "Each menu item has a pencil icon \u270f\ufe0f on the right. Click it to open the edit window, change the singer/band, song name, link or playback type and save. The list is reordered automatically." },
+                    { h: "How to Delete Items", p: "Select the song in the menu to open the player and click the (red) trash icon at the top of the playback area to remove the item." },
+                    { h: "Search", p: "Use the 'Search...' field at the top of the side menu to filter items by singer/band or song name in real time." },
+                    { h: "Original vs Standard Playback", p: "When adding or editing, check 'Original Playback?' to mark the official version. Original items show a green border on the right; the others show a gray border." },
+                    { h: "Open Mode (Switch)", p: "Off = opens the embedded video in the content area. On = opens directly in a new browser tab with a native click (allowing unrestricted autoplay)." },
+                    { h: "YouTube Subscriber Status", p: "The shield icon button toggles subscriber (Premium) mode. When active, the player uses parameters that reduce branding/overlays and shows the 'Premium' badge." },
+                    { h: "Light / Dark Theme", p: "Use the theme button (moon/sun) to switch between light and dark modes. Your preference is saved in the browser." },
+                    { h: "Export / Import JSON", p: "With the import/export button you can download your whole collection as a JSON file (backup) or load a JSON file to restore/replace the current list." },
+                    { h: "Recommended Browser", p: "This app runs best on Google Chrome. For the best playback and autoplay experience, we recommend opening it in Google Chrome." }
+                ]
+            }
+        };
+
+        function renderHelp() {
+            const t = helpTexts[helpLang];
+            document.getElementById('helpTitle').innerText = t.title;
+            document.getElementById('helpCloseBtn').innerText = t.close;
+            document.getElementById('helpLangLabel').innerText = t.langLabel;
+            document.getElementById('helpContent').innerHTML = t.sections.map(s =>
+                `<div class="p-2 bg-pastel-bg dark:bg-darkpastel-bg rounded-lg"><strong class="text-slate-800 dark:text-slate-100">${s.h}</strong><p class="mt-0.5">${s.p}</p></div>`
+            ).join('');
+        }
+
+        function toggleHelpLang() {
+            helpLang = document.getElementById('helpLangSwitch').checked ? 'en' : 'pt';
+            renderHelp();
         }
 
         function toggleOpenMode() {
