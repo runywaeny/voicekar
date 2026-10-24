@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VoiceKar - Seu Karaoke & Vídeos</title>
+    <title>VoxKar - Seu Karaoke & Vídeos</title>
     
     <!-- Favicon: Ícone de Microfone Lilás Escuro na Aba do Navegador -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%235E3A8C'><path d='M12 14a3 3 0 0 0 3-3V5a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3zm5-3a1 1 0 0 0-2 0 3 3 0 0 1-6 0 1 1 0 0 0-2 0 5 5 0 0 0 4 4.9V19H9a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-3.1A5 5 0 0 0 17 11z'/></svg>">
@@ -92,7 +92,7 @@
                     <path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3zm5-3a1 1 0 0 0-2 0 3 3 0 0 1-6 0 1 1 0 0 0-2 0 5 5 0 0 0 4 4.9V19H9a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-2v-3.1A5 5 0 0 0 17 11z"/>
                 </svg>
             </div>
-            <h1 class="text-base sm:text-lg font-bold tracking-tight text-[#4A2E6E] dark:text-[#E8DFF5] truncate">VoiceKar</h1>
+            <h1 class="text-base sm:text-lg font-bold tracking-tight text-[#4A2E6E] dark:text-[#E8DFF5] truncate">VoxKar</h1>
         </div>
 
         <!-- Botões com espaçamento de 1px -->
@@ -156,6 +156,12 @@
                     </span>
                     <input type="text" id="searchInput" oninput="renderMenuList()" placeholder="Buscar..." class="w-full pl-7 pr-2 py-1 text-xs rounded-md bg-pastel-bg dark:bg-darkpastel-bg border border-pastel-border dark:border-darkpastel-border focus:outline-none focus:ring-1 focus:ring-pastel-accent">
                 </div>
+                <button onclick="toggleFavoritesFilter()" id="favFilterBtn" title="Mostrar apenas favoritas" class="mt-1.5 w-full flex items-center justify-center gap-1.5 py-1 text-[11px] font-medium rounded-md border border-pastel-border dark:border-darkpastel-border bg-pastel-bg dark:bg-darkpastel-bg text-slate-600 dark:text-slate-300 transition-colors">
+                    <svg id="favFilterIcon" xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                    <span id="favFilterLabel">Mostrar Favoritas</span>
+                </button>
             </div>
             <div class="flex-1 overflow-y-auto p-1.5 space-y-1" id="songList"></div>
         </aside>
@@ -181,6 +187,11 @@
                         <span id="subscriberBadge" class="hidden text-[10px] px-1.5 py-0.5 rounded-full font-bold bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300 shrink-0">Premium</span>
                     </div>
                     <div class="flex items-center gap-1.5 shrink-0">
+                        <button onclick="toggleFavorite()" id="favBtn" title="Favoritar" class="p-1 text-slate-400 hover:text-pink-500 rounded">
+                            <svg id="favIcon" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                            </svg>
+                        </button>
                         <a id="externalLinkBtn" href="#" target="_blank" title="Abrir no YouTube" class="p-1 text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 rounded">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -270,6 +281,11 @@
                 <input type="file" id="importFile" accept=".json" class="hidden" onchange="importJSON(event)">
                 <button onclick="document.getElementById('importFile').click()" class="w-full py-1.5 bg-pastel-secondary/30 text-slate-800 dark:text-slate-100 font-medium text-xs rounded-lg">Carregar Arquivo JSON</button>
             </div>
+            <div class="p-2.5 bg-pastel-bg dark:bg-darkpastel-bg rounded-xl border border-pastel-border dark:border-darkpastel-border">
+                <input type="file" id="mergeFile" accept=".json" class="hidden" onchange="mergeJSON(event)">
+                <button onclick="document.getElementById('mergeFile').click()" class="w-full py-1.5 bg-pastel-primary/40 text-slate-800 dark:text-slate-100 font-medium text-xs rounded-lg">Mesclar</button>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-1 text-center">Importa os dados do arquivo sem apagar os já existentes.</p>
+            </div>
             <div class="flex justify-end pt-1">
                 <button onclick="closeModal('ioModal')" class="px-3 py-1 text-xs rounded-lg bg-pastel-bg dark:bg-darkpastel-bg text-slate-700">Fechar</button>
             </div>
@@ -280,7 +296,7 @@
     <div id="helpModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs hidden items-center justify-center p-3 z-50">
         <div class="bg-pastel-card dark:bg-darkpastel-card rounded-2xl max-w-md w-full p-4 border border-pastel-border dark:border-darkpastel-border shadow-xl space-y-2.5 max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between gap-2">
-                <h3 id="helpTitle" class="text-sm font-bold text-slate-800 dark:text-slate-100">Ajuda do VoiceKar</h3>
+                <h3 id="helpTitle" class="text-sm font-bold text-slate-800 dark:text-slate-100">Ajuda do VoxKar</h3>
                 <label class="flex items-center gap-1.5 cursor-pointer text-[11px] font-medium text-slate-600 dark:text-slate-300 shrink-0 select-none">
                     <input type="checkbox" id="helpLangSwitch" onchange="toggleHelpLang()" class="w-3.5 h-3.5 rounded text-pastel-primary border-gray-300">
                     <span id="helpLangLabel">Translate to English</span>
@@ -295,8 +311,97 @@
 
     <script>
         const initialSongs = [
-            { id: "1", artist: "4 Non Blondes", title: "Whats Up", url: "https://www.youtube.com/embed/6NXnxTNIWkc", isOriginal: true },
-            { id: "2", artist: "Adele", title: "Set Fire To The Rain", url: "https://www.youtube.com/embed/a2giXO6eyuI", isOriginal: false }
+            { id: "1792848061732", artist: "Barbra Streisand", title: "An Affair To Remember", url: "https://www.youtube.com/embed/ykHVzW6HW48?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792849603918", artist: "Barbra Streisand", title: "Everything", url: "https://www.youtube.com/embed/NWoI-mxuv8M?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792849115121", artist: "Barbra Streisand", title: "Moon River", url: "https://www.youtube.com/embed/NH2TZTFJXDs?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792850052432", artist: "Barbra Streisand & Kris Kristofferson", title: "Lost Inside Of You", url: "https://www.youtube.com/embed/OoVwY_ittmM?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792849849646", artist: "Belchior", title: "\u00c0 Palo Seco", url: "https://www.youtube.com/embed/SextXXVbw0w?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792849685354", artist: "Belchior", title: "Brasileiramente Linda", url: "https://www.youtube.com/embed/STH4m9m1sNk?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792849182225", artist: "Belchior", title: "Conhe\u00e7o o Meu Lugar", url: "https://www.youtube.com/embed/GPWfmnH4XU8?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792764787300", artist: "Belchior", title: "Na Hora do Almo\u00e7o", url: "https://www.youtube.com/embed/RosMeLBXAWc?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792339544525", artist: "Ben Nichols", title: "The Last Pale Light in the West", url: "https://www.youtube.com/embed/GkkepDkIWec?autoplay=1&enablejsapi=1", isOriginal: true },
+            { id: "1792851967428", artist: "Beto Guedes & Joyce", title: "Rio Doce", url: "https://www.youtube.com/embed/q3slScscqbk?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792774130811", artist: "Blink-182", title: "Edging", url: "https://www.youtube.com/embed/-g15D8xJ7yE?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792847996021", artist: "Carly Simon", title: "My Romance", url: "https://www.youtube.com/embed/ZG3IvlFAiok?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792848890615", artist: "C\u00e1ssia Eller", title: "Luz dos Olhos", url: "https://www.youtube.com/embed/9qpYIdJBQeE?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792420818183", artist: "C\u00e1ssia Eller", title: "Palavras ao Vento", url: "https://www.youtube.com/embed/62u0sYsQ0SU?autoplay=1&enablejsapi=1&iv_load_policy=3&modestbranding=1", isOriginal: true },
+            { id: "1792849049182", artist: "C\u00e1ssia Eller & Nando Reis", title: "Relic\u00e1rio", url: "https://www.youtube.com/embed/cVh7bttaWBs?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792850820923", artist: "Clara Nunes", title: "Na\u00e7\u00e3o", url: "https://www.youtube.com/embed/u1w9kQZ9s-g?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792848503581", artist: "Clara Nunes", title: "Tristeza P\u00e9 no Ch\u00e3o", url: "https://www.youtube.com/embed/4ik04Hn7b8c?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792849490320", artist: "Creedence Clearwater Revival", title: "(Wish I Could) Hideway", url: "https://www.youtube.com/embed/Dn2OtDnz7aQ?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792843920082", artist: "Creedence Clearwater Revival", title: "Born To Move", url: "https://www.youtube.com/embed/0rUo2HkKX2w?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792850226387", artist: "Creedence Clearwater Revival", title: "It's Just a Thought", url: "https://www.youtube.com/embed/doLc_zSHoxE?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792847859966", artist: "Creedence Clearwater Revival", title: "Wrote A Song For Everyone", url: "https://www.youtube.com/embed/w-TzDkc28SE?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792852635427", artist: "Dashboard Confessional", title: "Hands Down", url: "https://www.youtube.com/embed/3V3_QC7rPoo?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792766630007", artist: "David Bowie", title: "Modern Love", url: "https://www.youtube.com/embed/kRc7GA12Agw?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792688312863", artist: "Djavan", title: "Alegre Menina", url: "https://www.youtube.com/embed/HjJPcgrbmo4?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792847349077", artist: "Elba Ramalho", title: "Dia Branco", url: "https://www.youtube.com/embed/_TsR5COg1hA?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792849370752", artist: "Elba Ramalho", title: "Veja Margarida", url: "https://www.youtube.com/embed/pPp8NlTMKdw?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792850741513", artist: "Elba Ramalho", title: "Voc\u00ea se Lembra", url: "https://www.youtube.com/embed/ye63dXFsxns?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792846419512", artist: "Elba Ramalho & Alceu Valen\u00e7a", title: "Tesoura do Desejo", url: "https://www.youtube.com/embed/QpV-NFrtd_s?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792848311452", artist: "Elba Ramalho & Geraldo Azevedo", title: "Chorando e Cantando", url: "https://www.youtube.com/embed/H5gy8rodKc0?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792340617247", artist: "Elba Ramalho & Geraldo Azevedo & Z\u00e9 Ramalho", title: "Caravana", url: "https://www.youtube.com/embed/vRvcmxyrzCY?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792849305433", artist: "Elba Ramalho & Z\u00e9 Ramalho", title: "Ch\u00e3o de Giz", url: "https://www.youtube.com/embed/C7ehDscKclo?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792850882383", artist: "Elis Regina", title: "O Cantador", url: "https://www.youtube.com/embed/aPv_G1AmwpU?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792851031873", artist: "Elis Regina", title: "Quero", url: "https://www.youtube.com/embed/qm6pYBDCvp8?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792423929093", artist: "Elis Regina & Tom Jobim", title: "\u00c1guas de Mar\u00e7o", url: "https://www.youtube.com/embed/f53KY6OO1E4?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792341505239", artist: "Geraldo Azevedo", title: "Dona da Minha Cabe\u00e7a", url: "https://www.youtube.com/embed/z5vkZiuifdg?autoplay=1&enablejsapi=1", isOriginal: true },
+            { id: "1792851392754", artist: "James Taylor", title: "Anywhere Like Heaven", url: "https://www.youtube.com/embed/w6Ujw5R5WUo?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792852563238", artist: "James Taylor", title: "Hello Old Friend", url: "https://www.youtube.com/embed/B8_F2Y0E79I?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792847278644", artist: "James Taylor", title: "Oh, Susannah", url: "https://www.youtube.com/embed/ENo6MOOvZIg?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792847677708", artist: "Joan Osborne", title: "What If God Was One Of Us", url: "https://www.youtube.com/embed/mQQMHZtdOhs?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792852481527", artist: "Kris Kristofferson", title: "Crippled Crow", url: "https://www.youtube.com/embed/tmjc1OlWLiU?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792847932606", artist: "Kris Kristofferson", title: "Watch Closely Now", url: "https://www.youtube.com/embed/5woKHbQSds8?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792689011033", artist: "Luciano Pavarotti", title: "Nessum Dorma", url: "https://www.youtube.com/embed/9NsAweFSyZg?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792688919208", artist: "Luciano Pavarotti", title: "Recondita Armonia", url: "https://www.youtube.com/embed/RDsj8fW-350?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792685598023", artist: "Luciano Pavarotti", title: "Vesti la Giuba", url: "https://www.youtube.com/embed/LQv1Tu2aZFo?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792771676254", artist: "Maria Creuza", title: "Chega de Saudade", url: "https://www.youtube.com/embed/DAbepR41WpU?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792688179656", artist: "Maria Creuza", title: "Eu e a Brisa", url: "https://www.youtube.com/embed/hPb_33g-lLs?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792676405506", artist: "Maria Creuza", title: "Mas Que Nada", url: "https://www.youtube.com/embed/4OvNKFbBQ-4?autoplay=1&enablejsapi=1", isOriginal: true },
+            { id: "1792685453078", artist: "Marilia Medalha", title: "O Grande Apelo", url: "https://www.youtube.com/embed/J8OGzxqkxnw?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792688833634", artist: "Maureen McGovern", title: "The Morning After", url: "https://www.youtube.com/embed/veVXE4XTxfE?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792850566456", artist: "Melanie Safka", title: "Beautiful People", url: "https://www.youtube.com/embed/R8vXlbFWNI0?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792675725290", artist: "Menos \u00e9 Mais", title: "Fatalmente/Separa\u00e7\u00e3o/Temporal", url: "https://www.youtube.com/embed/7wNqpPzik04?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792761892009", artist: "Menos \u00e9 Mais", title: "Melhor eu ir/Ligando os Fatos/Sonho de Amor/Deixa eu te querer", url: "https://www.youtube.com/embed/FPcB2krXiH0?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792675850213", artist: "Menos \u00e9 Mais", title: "Reca\u00edda Vai Me Dando Corda Adorei", url: "https://www.youtube.com/embed/DS3v2Qb_MFE?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792850303621", artist: "Oswaldo Montenegro", title: "Sempre N\u00e3o \u00e9 Todo Dia", url: "https://www.youtube.com/embed/tg-eyxAG02s?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792339433607", artist: "Pearl Jam", title: "Black", url: "https://www.youtube.com/embed/mmIrFa8Toew?autoplay=1&enablejsapi=1", isOriginal: true },
+            { id: "1792771830145", artist: "Raul Seixas", title: "Morning Trainhttps://youtu.be/bByVSiur4MA?si=W-WKJuxm3HGtC7NM", url: "https://www.youtube.com/embed/bByVSiur4MA?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792849928866", artist: "Raul Seixas", title: "O Conto do S\u00e1bio Chin\u00eas", url: "https://www.youtube.com/embed/BPvp6ufY0wU?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792850629164", artist: "Rita Lee", title: "Bruxa Amarela", url: "https://www.youtube.com/embed/o0d2_RvlSm0?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792852812746", artist: "Rita Lee", title: "Troca Toca", url: "https://www.youtube.com/embed/siQGUTN-ObE?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792852187738", artist: "Secos & Molhados / Ney Matogrosso", title: "El Rey", url: "https://www.youtube.com/embed/PDlo44XiyPg?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792848971187", artist: "Secos & Molhados / Ney Matogrosso", title: "Fala", url: "https://www.youtube.com/embed/klTh2PzNQ9g?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792852705702", artist: "Secos & Molhados / Ney Matogrosso", title: "Medo Mulato", url: "https://www.youtube.com/embed/F-pdBB1ujlk?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792851634864", artist: "Secos & Molhados / Ney Matogrosso", title: "O Doce e o Amargo", url: "https://www.youtube.com/embed/n1Hxu6VrNfI?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792852888468", artist: "Sergio Endrigo", title: "Oggi e Domenica Per Noi", url: "https://www.youtube.com/embed/t1VcNc_m4j8?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792848128153", artist: "Supertramp", title: "A Soapbox Opera", url: "https://www.youtube.com/embed/tf4obpuBs58?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792676158065", artist: "Supertramp", title: "Even In The Quietest Moments", url: "https://www.youtube.com/embed/Pwn-nqDebF8?autoplay=1&enablejsapi=1", isOriginal: true },
+            { id: "1792676301789", artist: "Supertramp", title: "Two Of Us", url: "https://www.youtube.com/embed/QEACNv0vCUQ?autoplay=1&enablejsapi=1", isOriginal: true },
+            { id: "1792846529332", artist: "Temas - Desenhos - Dragon Ball Z", title: "N\u00f3s \u00c9ramos Anjos", url: "https://www.youtube.com/embed/JXNWCGE5SGE?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792685943135", artist: "Temas - Disney - A Pequena Sereia", title: "Parte de Seu Mundo", url: "https://www.youtube.com/embed/_8gP59idwAM?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792849996624", artist: "Temas - Disney - Pocahontas", title: "L\u00e1 na Curva", url: "https://www.youtube.com/embed/DodHYhGwUCs?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792847444074", artist: "Temas - Filmes - Horizonte Perdido", title: "Reflections", url: "https://www.youtube.com/embed/xO9jg-tWxrc?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792852278816", artist: "Temas - Filmes - Horizonte Perdido", title: "Share the Joy", url: "https://www.youtube.com/embed/5nUmMPYM6CM?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792853011210", artist: "Temas - Filmes - Letra e M\u00fasica", title: "Way Back Into Love", url: "https://www.youtube.com/embed/U1PqWvVhB6k?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792851826814", artist: "Temas - Filmes - O Mercador de Almas", title: "The Long, Hot Summer", url: "https://www.youtube.com/embed/FwrYqUNpg_c?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792851744280", artist: "Temas - Seriados - Cybercops", title: "Encerramento", url: "https://www.youtube.com/embed/cJTw4t3Z_EQ?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792851472013", artist: "Temas - Seriados - Kamen Rider", title: "Black Hole Message", url: "https://www.youtube.com/embed/iw2ejycL7eY?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792847529846", artist: "Temas - Seriados - Kamen Rider", title: "Hoshi no Lullaby", url: "https://www.youtube.com/embed/MaUmccL_qxU?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792761971245", artist: "The Cranberries", title: "Close To You", url: "https://www.youtube.com/embed/Y3LUJjCJhfQ?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792762643034", artist: "The Cranberries", title: "I'm Still Remembering", url: "https://www.youtube.com/embed/8XDm_JalXkg?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792849756770", artist: "The Cranberries", title: "Shattered", url: "https://www.youtube.com/embed/8ey_K-CbzD4?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792851900411", artist: "The Cranberries", title: "When You're Gone", url: "https://www.youtube.com/embed/TPfaw0AgpZ4?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792676354441", artist: "Thiaguinho", title: "Deixa Tudo Como T\u00e1", url: "https://www.youtube.com/embed/wm-Bw5FZ-C8?autoplay=1&enablejsapi=1", isOriginal: true },
+            { id: "1792676236064", artist: "Thiaguinho", title: "Falta Voc\u00ea", url: "https://www.youtube.com/embed/xKPaBwlI16o?autoplay=1&enablejsapi=1", isOriginal: true },
+            { id: "1792848809624", artist: "Tim Maia", title: "Eu Amo Voc\u00ea", url: "https://www.youtube.com/embed/IFtS3wLrBLU?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792843975215", artist: "Tim Maia", title: "O Que Me Importa", url: "https://www.youtube.com/embed/6H3-L0xczY4?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792852108999", artist: "Toquinho & Maria Creuza", title: "Veja Voc\u00ea", url: "https://www.youtube.com/embed/YoImC1loIRI?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792850505255", artist: "Toquinho & Mar\u00edlia Medalha", title: "Mais Um Adeus", url: "https://www.youtube.com/embed/7VkRj9QOVlg?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792850139972", artist: "Vinicius de Moraes & Mar\u00edlia Medalha", title: "Tomara", url: "https://www.youtube.com/embed/HK6cuGccsU8?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792688030574", artist: "Vinicius de Moraes & Toquinho", title: "Insensatez", url: "https://www.youtube.com/embed/xA-RVIVqTtw?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792688119916", artist: "Vinicius de Moraes & Toquinho", title: "No Colo da Serra", url: "https://www.youtube.com/embed/n_zpylzDYno?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
+            { id: "1792764373006", artist: "Yes", title: "Soon", url: "https://www.youtube.com/embed/hMAYTpKTmSE?autoplay=1&enablejsapi=1&controls=1", isOriginal: true },
         ];
 
         let songs = [];
@@ -306,6 +411,7 @@
         let openInNewTab = false;
         let isYouTubeSubscriber = false;
         let helpLang = 'pt';
+        let showFavoritesOnly = false;
 
         window.onload = function() {
             loadTheme();
@@ -317,14 +423,14 @@
         };
 
         function loadSongs() {
-            const stored = localStorage.getItem('voicekar_songs');
+            const stored = localStorage.getItem('voxkar_songs');
             songs = stored ? JSON.parse(stored) : [...initialSongs];
             sortSongs();
         }
 
         function saveSongs() {
             sortSongs();
-            localStorage.setItem('voicekar_songs', JSON.stringify(songs));
+            localStorage.setItem('voxkar_songs', JSON.stringify(songs));
             renderMenuList();
         }
 
@@ -375,9 +481,9 @@
             const query = document.getElementById('searchInput').value.toLowerCase();
             listEl.innerHTML = '';
 
-            const filtered = songs.filter(s => s.artist.toLowerCase().includes(query) || s.title.toLowerCase().includes(query));
+            const filtered = songs.filter(s => (s.artist.toLowerCase().includes(query) || s.title.toLowerCase().includes(query)) && (!showFavoritesOnly || s.isFavorite));
             if (filtered.length === 0) {
-                listEl.innerHTML = `<p class="text-[11px] text-center text-gray-400 py-3">Sem registros.</p>`;
+                listEl.innerHTML = `<p class="text-[11px] text-center text-gray-400 py-3">${showFavoritesOnly ? 'Nenhuma favorita.' : 'Sem registros.'}</p>`;
                 return;
             }
 
@@ -445,19 +551,64 @@
                     subBadge.classList.add('hidden');
                 }
 
+                updateFavoriteUI(song);
+
                 document.getElementById('youtubeIframe').src = embedUrl;
             }
         }
 
+        function updateFavoriteUI(song) {
+            const btn = document.getElementById('favBtn');
+            const icon = document.getElementById('favIcon');
+            const fav = !!(song && song.isFavorite);
+            if (fav) {
+                icon.setAttribute('fill', 'currentColor');
+                btn.classList.remove('text-slate-400');
+                btn.classList.add('text-pink-500');
+                btn.title = 'Remover dos favoritos';
+            } else {
+                icon.setAttribute('fill', 'none');
+                btn.classList.add('text-slate-400');
+                btn.classList.remove('text-pink-500');
+                btn.title = 'Favoritar';
+            }
+        }
+
+        function toggleFavoritesFilter() {
+            showFavoritesOnly = !showFavoritesOnly;
+            const btn = document.getElementById('favFilterBtn');
+            const icon = document.getElementById('favFilterIcon');
+            const label = document.getElementById('favFilterLabel');
+            if (showFavoritesOnly) {
+                btn.classList.add('bg-pink-100', 'dark:bg-pink-900/30', 'text-pink-600', 'dark:text-pink-400', 'border-pink-300');
+                icon.setAttribute('fill', 'currentColor');
+                label.innerText = helpLang === 'en' ? 'Showing Favorites' : 'Mostrando Favoritas';
+            } else {
+                btn.classList.remove('bg-pink-100', 'dark:bg-pink-900/30', 'text-pink-600', 'dark:text-pink-400', 'border-pink-300');
+                icon.setAttribute('fill', 'none');
+                label.innerText = helpLang === 'en' ? 'Show Favorites' : 'Mostrar Favoritas';
+            }
+            renderMenuList();
+        }
+
+        function toggleFavorite() {
+            if (!selectedSongId) return;
+            const song = songs.find(s => s.id === selectedSongId);
+            if (!song) return;
+            song.isFavorite = !song.isFavorite;
+            saveSongs();
+            updateFavoriteUI(song);
+        }
+
         function toggleYouTubeSubscriber() {
             isYouTubeSubscriber = !isYouTubeSubscriber;
-            localStorage.setItem('voicekar_subscriber', isYouTubeSubscriber ? 'true' : 'false');
+            localStorage.setItem('voxkar_subscriber', isYouTubeSubscriber ? 'true' : 'false');
             updateSubscriberUI();
             if (selectedSongId && !openInNewTab) selectSong(selectedSongId);
         }
 
         function loadSubscriberStatus() {
-            isYouTubeSubscriber = localStorage.getItem('voicekar_subscriber') === 'true';
+            isYouTubeSubscriber = localStorage.getItem('voxkar_subscriber') === 'true';
             updateSubscriberUI();
         }
 
@@ -533,11 +684,12 @@
 
         const helpTexts = {
             pt: {
-                title: "Ajuda do VoiceKar",
+                title: "Ajuda do VoxKar",
                 close: "Fechar",
                 langLabel: "Translate to English",
+                countLabel: "Atualmente com {n} m\u00fasicas",
                 sections: [
-                    { h: "Como Adicionar Itens ao Menu", p: "Clique no bot\u00e3o com o \u00edcone de adi\u00e7\u00e3o (+) na barra superior. Informe o cantor/banda, o nome da m\u00fasica e o link do v\u00eddeo (YouTube) e salve. O item \u00e9 inserido automaticamente em ordem alfab\u00e9tica no menu lateral." },
+                    { h: "Como Adicionar Itens ao Menu", p: "Clique no bot\u00e3o com o \u00edcone de adi\u00e7\u00e3o (+) na barra superior. Informe o cantor/banda, o nome da m\u00fasica e o link do v\u00eddeo (YouTube) e salve. O item \u00e9 inserido automaticamente em ordem alfab\u00e9tica no menu lateral. O melhor m\u00e9todo para obter o link \u00e9 clicar em Compartilhar e depois em Copiar diretamente no v\u00eddeo do YouTube, e colar esse link no campo correspondente." },
                     { h: "Como Editar Itens do Menu", p: "Cada item do menu possui um \u00edcone de l\u00e1pis \u270f\ufe0f \u00e0 direita. Clique nele para abrir a janela de edi\u00e7\u00e3o, altere o cantor/banda, o nome da m\u00fasica, o link ou o tipo de playback e salve. A lista \u00e9 reordenada automaticamente." },
                     { h: "Como Excluir Itens", p: "Selecione a m\u00fasica no menu para abrir o player e clique no \u00edcone de lixeira (vermelho) no topo da \u00e1rea de reprodu\u00e7\u00e3o para remover o item." },
                     { h: "Busca", p: "Use o campo 'Buscar...' no topo do menu lateral para filtrar itens pelo nome do cantor/banda ou da m\u00fasica em tempo real." },
@@ -545,16 +697,19 @@
                     { h: "Modo de Abertura (Switch)", p: "Desligado = abre o v\u00eddeo incorporado na \u00e1rea de conte\u00fado. Ligado = abre diretamente em nova aba do navegador com clique nativo (permitindo autoplay irrestrito)." },
                     { h: "Status de Assinante do YouTube", p: "O bot\u00e3o com \u00edcone de escudo alterna o modo assinante (Premium). Quando ativo, o player usa par\u00e2metros que reduzem marcas/sobreposi\u00e7\u00f5es e exibe o selo 'Premium'." },
                     { h: "Tema Claro / Escuro", p: "Use o bot\u00e3o de tema (lua/sol) para alternar entre os modos claro e escuro. Sua prefer\u00eancia fica salva no navegador." },
-                    { h: "Exportar / Importar JSON", p: "Pelo bot\u00e3o de importar/exportar voc\u00ea pode baixar todo o seu acervo em um arquivo JSON (backup) ou carregar um arquivo JSON para restaurar/substituir a lista atual." },
+                    { h: "Exportar / Importar / Mesclar JSON", p: "Pelo bot\u00e3o de importar/exportar voc\u00ea pode baixar todo o seu acervo em um arquivo JSON (backup), carregar um arquivo JSON para substituir a lista atual, ou usar a op\u00e7\u00e3o 'Mesclar' para importar os dados de um arquivo sem apagar os itens j\u00e1 existentes (apenas os itens novos s\u00e3o adicionados)." },
+                    { h: "Favoritar V\u00eddeo", p: "Na barra acima do v\u00eddeo em reprodu\u00e7\u00e3o, clique no \u00edcone de cora\u00e7\u00e3o para marcar ou desmarcar o v\u00eddeo como favorito. A prefer\u00eancia fica salva junto com os dados. Use o bot\u00e3o 'Mostrar Favoritas', logo abaixo da busca, para exibir apenas as m\u00fasicas marcadas como favoritas." },
+                    { h: "\u26a0\ufe0f Fa\u00e7a Backup (Exporte Sempre!)", p: "ATEN\u00c7\u00c3O: todo o seu conte\u00fado fica salvo apenas no seu dispositivo (no navegador). Exporte sempre o arquivo JSON para n\u00e3o perder seus dados. Se limpar o navegador, trocar de dispositivo ou ocorrer algum problema, s\u00f3 ser\u00e1 poss\u00edvel recuperar o acervo a partir de um backup exportado." },
                     { h: "Navegador Recomendado", p: "Este aplicativo funciona melhor no Google Chrome. Para a melhor experi\u00eancia de reprodu\u00e7\u00e3o e autoplay, recomendamos abri-lo no Google Chrome." }
                 ]
             },
             en: {
-                title: "VoiceKar Help",
+                title: "VoxKar Help",
                 close: "Close",
                 langLabel: "Traduzir para portugu\u00eas",
+                countLabel: "Currently with {n} songs",
                 sections: [
-                    { h: "How to Add Items to the Menu", p: "Click the add (+) button in the top bar. Enter the singer/band, the song name and the video link (YouTube), then save. The item is automatically inserted in alphabetical order in the side menu." },
+                    { h: "How to Add Items to the Menu", p: "Click the add (+) button in the top bar. Enter the singer/band, the song name and the video link (YouTube), then save. The item is automatically inserted in alphabetical order in the side menu. The best method to get the link is to click Share and then Copy directly on the YouTube video, and paste that link into the corresponding field." },
                     { h: "How to Edit Menu Items", p: "Each menu item has a pencil icon \u270f\ufe0f on the right. Click it to open the edit window, change the singer/band, song name, link or playback type and save. The list is reordered automatically." },
                     { h: "How to Delete Items", p: "Select the song in the menu to open the player and click the (red) trash icon at the top of the playback area to remove the item." },
                     { h: "Search", p: "Use the 'Search...' field at the top of the side menu to filter items by singer/band or song name in real time." },
@@ -562,7 +717,9 @@
                     { h: "Open Mode (Switch)", p: "Off = opens the embedded video in the content area. On = opens directly in a new browser tab with a native click (allowing unrestricted autoplay)." },
                     { h: "YouTube Subscriber Status", p: "The shield icon button toggles subscriber (Premium) mode. When active, the player uses parameters that reduce branding/overlays and shows the 'Premium' badge." },
                     { h: "Light / Dark Theme", p: "Use the theme button (moon/sun) to switch between light and dark modes. Your preference is saved in the browser." },
-                    { h: "Export / Import JSON", p: "With the import/export button you can download your whole collection as a JSON file (backup) or load a JSON file to restore/replace the current list." },
+                    { h: "Export / Import / Merge JSON", p: "With the import/export button you can download your whole collection as a JSON file (backup), load a JSON file to replace the current list, or use the 'Merge' option to import the data from a file without deleting the existing items (only new items are added)." },
+                    { h: "Favorite Video", p: "In the bar above the playing video, click the heart icon to mark or unmark the video as a favorite. The preference is saved together with the data. Use the 'Show Favorites' button, right below the search, to display only the songs marked as favorites." },
+                    { h: "\u26a0\ufe0f Back Up (Always Export!)", p: "WARNING: all of your content is saved only on your device (in the browser). Always export the JSON file so you don't lose your data. If you clear the browser, switch devices or run into any problem, the collection can only be recovered from an exported backup." },
                     { h: "Recommended Browser", p: "This app runs best on Google Chrome. For the best playback and autoplay experience, we recommend opening it in Google Chrome." }
                 ]
             }
@@ -573,7 +730,8 @@
             document.getElementById('helpTitle').innerText = t.title;
             document.getElementById('helpCloseBtn').innerText = t.close;
             document.getElementById('helpLangLabel').innerText = t.langLabel;
-            document.getElementById('helpContent').innerHTML = t.sections.map(s =>
+            const countHtml = `<div class="p-2 bg-pastel-accent/20 dark:bg-darkpastel-accent/20 rounded-lg text-center font-bold text-slate-800 dark:text-slate-100">${t.countLabel.replace('{n}', songs.length)}</div>`;
+            document.getElementById('helpContent').innerHTML = countHtml + t.sections.map(s =>
                 `<div class="p-2 bg-pastel-bg dark:bg-darkpastel-bg rounded-lg"><strong class="text-slate-800 dark:text-slate-100">${s.h}</strong><p class="mt-0.5">${s.p}</p></div>`
             ).join('');
         }
@@ -585,24 +743,24 @@
 
         function toggleOpenMode() {
             openInNewTab = document.getElementById('openModeSwitch').checked;
-            localStorage.setItem('voicekar_openmode', openInNewTab ? 'tab' : 'content');
+            localStorage.setItem('voxkar_openmode', openInNewTab ? 'tab' : 'content');
             renderMenuList();
         }
 
         function loadOpenMode() {
-            openInNewTab = localStorage.getItem('voicekar_openmode') === 'tab';
+            openInNewTab = localStorage.getItem('voxkar_openmode') === 'tab';
             document.getElementById('openModeSwitch').checked = openInNewTab;
         }
 
         function toggleTheme() {
             isDarkMode = !isDarkMode;
             document.documentElement.classList.toggle('dark', isDarkMode);
-            localStorage.setItem('voicekar_theme', isDarkMode ? 'dark' : 'light');
+            localStorage.setItem('voxkar_theme', isDarkMode ? 'dark' : 'light');
             updateThemeIcon();
         }
 
         function loadTheme() {
-            isDarkMode = localStorage.getItem('voicekar_theme') === 'dark' || (!localStorage.getItem('voicekar_theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            isDarkMode = localStorage.getItem('voxkar_theme') === 'dark' || (!localStorage.getItem('voxkar_theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
             document.documentElement.classList.toggle('dark', isDarkMode);
             updateThemeIcon();
         }
@@ -617,7 +775,7 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(songs, null, 2));
             const dl = document.createElement('a');
             dl.setAttribute("href", dataStr);
-            dl.setAttribute("download", `voicekar_backup.json`);
+            dl.setAttribute("download", `voxkar_backup.json`);
             document.body.appendChild(dl);
             dl.click();
             dl.remove();
@@ -634,7 +792,32 @@
             if (event.target.files[0]) reader.readAsText(event.target.files[0]);
         }
 
-        function openModal(id) { document.getElementById(id).classList.remove('hidden'); document.getElementById(id).classList.add('flex'); }
+        function mergeJSON(event) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (!Array.isArray(imported)) { alert("Erro ao ler JSON."); return; }
+                    let added = 0;
+                    imported.forEach(item => {
+                        if (!item || !item.url) return;
+                        const exists = songs.some(s => s.id === item.id || (s.url === item.url && s.artist === item.artist && s.title === item.title));
+                        if (!exists) {
+                            if (!item.id) item.id = Date.now().toString() + Math.floor(Math.random() * 1000);
+                            songs.push(item);
+                            added++;
+                        }
+                    });
+                    saveSongs();
+                    closeModal('ioModal');
+                    alert(added > 0 ? `${added} item(ns) mesclado(s) com sucesso.` : "Nenhum item novo para mesclar.");
+                } catch (err) { alert("Erro ao ler JSON."); }
+            };
+            if (event.target.files[0]) reader.readAsText(event.target.files[0]);
+            event.target.value = '';
+        }
+
+        function openModal(id) { if (id === 'helpModal') renderHelp(); document.getElementById(id).classList.remove('hidden'); document.getElementById(id).classList.add('flex'); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); document.getElementById(id).classList.remove('flex'); }
         function escapeHtml(str) { return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"); }
     </script>
